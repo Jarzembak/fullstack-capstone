@@ -6,8 +6,10 @@
     "dev": "nodemon src/server/main.js -w src/server",
     "start": "NODE_ENV=production node src/server/main.js",
     "seed": "node ./src/server/db/seed.js",
-    "seed-prisma": "node ./src/server/db/seed-prisma.js",
     "build": "vite build"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
     "@prisma/client": "^5.12.1",

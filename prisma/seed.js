@@ -1,6 +1,6 @@
+// To fully drop and reseed tables, run: npx prisma migrate reset
 const { PrismaClient } = require("@prisma/client");
 const { faker } = require("@faker-js/faker");
-const db = require("./client");
 
 const prisma = new PrismaClient();
 
@@ -59,13 +59,19 @@ async function cartItemSeed() {
 };
 
 // WARNING: Will initialize all data!
-// Not currently working; await functions not set up correctly, probably causing runtime collisions.
+// Currently only seeds the user and product tables, not the dependent tables cart and cartItem.
 async function initAllTables() {
   try {
-    await db.query(`DROP TABLE IF EXISTS user;`);
-    await db.query(`DROP TABLE IF EXISTS product;`);
+    // users
+    await prisma.user.deleteMany();
     userSeed();
+    console.log(await prisma.user.findMany());
+    // products
+    await prisma.product.deleteMany();
     productSeed();
+    console.log(await prisma.product.findMany());
+    // cart (todo)
+    // cartItem (todo)
   }
   catch (error) {
     console.error(error);

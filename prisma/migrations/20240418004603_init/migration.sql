@@ -5,8 +5,8 @@ CREATE TABLE "user" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "isAdmin" BOOLEAN NOT NULL DEFAULT false,
     "isGuest" BOOLEAN NOT NULL DEFAULT false,
-    "firstName" VARCHAR(30) NOT NULL,
-    "lastName" VARCHAR(30) NOT NULL,
+    "firstName" VARCHAR(255) NOT NULL,
+    "lastName" VARCHAR(255) NOT NULL,
     "username" VARCHAR(255) NOT NULL,
     "password" VARCHAR(255) NOT NULL,
     "email" VARCHAR(255) NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE "cart" (
     "cartId" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "cartStatus" VARCHAR(20) NOT NULL,
+    "cartStatus" VARCHAR(255) NOT NULL,
     "userId" INTEGER NOT NULL,
 
     CONSTRAINT "cart_pkey" PRIMARY KEY ("cartId")
