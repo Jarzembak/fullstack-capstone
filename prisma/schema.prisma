@@ -25,7 +25,11 @@ model user {
   password        String      @db.VarChar(255)
   email           String      @db.VarChar(255)
   streetAddress   String      @db.VarChar(255)
+  city            String      @db.VarChar(255)
+  zipcode         String      @db.VarChar(255)
   billingAddress  String      @db.VarChar(255)
+  billingCity     String      @db.VarChar(255)
+  billingZipcode  String      @db.VarChar(255)
   phone           String      @db.VarChar(255)
   cart            cart[]
 }
