@@ -1,0 +1,28 @@
+form {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 0 10px 10px;
+}
+
+h2{
+    text-align: center;
+    text-decoration: underline;
+}
+
+label {
+    display: flex;
+    justify-content: space-between;
+    margin: 4px;
+    align-items: center;
+}
+
+span {
+    width: 100%;
+    text-align: center;
+}
+
+input {
+    margin: 0 4px;
+}
