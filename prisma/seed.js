@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 // Seed data for 20 users
 async function userSeed() {
   for(i=0; i < 20; i++){
+    try {
       await prisma.user.create({
         data: {
           firstName: faker.person.firstName(),
@@ -15,68 +16,107 @@ async function userSeed() {
           password: faker.internet.password(),
           email: faker.internet.email(),
           streetAddress: faker.location.streetAddress(),
+          city: faker.location.city(),
+          zipcode: faker.location.zipCode(),
           billingAddress: faker.location.streetAddress(), // != user.streetAddress
+          billingCity: faker.location.city(),
+          billingZipcode: faker.location.zipCode(),
           phone: faker.phone.number()
         }
       });
+    }
+    catch(error) {
+      console.log(error);
+      throw error;
+    };
+    console.log(await prisma.user.findFirst({
+      orderBy: {
+        userId: 'desc',
+      }
+    }));
   };
 };
 
 // Seed data for 20 products
 async function productSeed() {
   for(i=0; i < 20; i++){
-    await prisma.product.create({
-      data: {
-        name: faker.commerce.productName(),
-        imageUrl: faker.image.urlLoremFlickr(),
-        description: faker.commerce.productDescription(),
-        price: faker.commerce.price()
+    try {
+      await prisma.product.create({
+        data: {
+          name: faker.commerce.productName(),
+          imageUrl: faker.image.urlLoremFlickr(),
+          description: faker.commerce.productDescription(),
+          price: faker.commerce.price()
+        }
+      });
+    }
+    catch(error) {
+      console.log(error);
+      throw error;
+    };
+    console.log(await prisma.product.findFirst({
+      orderBy: {
+        productId: 'desc',
       }
-    });
+    }));
   };
 };
 
-// NOTE: pending due to dependencies
+// Seed 2 carts per user, 1 'current' and 1 'order complete'
 async function cartSeed() {
-  for(i=0; i < 20; i++){
-    await prisma.cartItem.create({
-      data: {
-        // todo
-      }
-    });
+  const users = await prisma.user.findMany();
+  for (i=0; i < users.length; i++) {
+    try{
+      await prisma.cart.create({
+        data: {
+          userId: users[i].userId,
+          cartStatus: "current"
+        }
+      });
+      await prisma.cart.create({
+        data: {
+          userId: users[i].userId,
+          cartStatus: "order complete"
+        }
+      });
+    }
+    catch(error) {
+      console.log(error);
+      throw error;
+    }
   };
 };
 
-// NOTE: pending due to dependencies
+// Seeds 1 item per cart
 async function cartItemSeed() {
-  for(i=0; i < 20; i++){
-    await prisma.cartItem.create({
-      data: {
-        // todo
-      }
-    });
+  const products = await prisma.product.findMany();
+  const carts = await prisma.cart.findMany();
+  for (i=0; i < carts.length; i++) {
+    try{
+      let randomInt = Math.floor(Math.random() * products.length); // random product
+      await prisma.cartItem.create({
+        data: {
+          cartId: carts[i].cartId,
+          productId: products[randomInt].productId,
+          price: products[randomInt].price,
+          quantity: Math.floor(Math.random() * 15)
+        }
+      });
+    }
+    catch(error) {
+      console.log(error);
+      throw error;
+    }
   };
 };
 
 // WARNING: Will initialize all data!
-// Currently only seeds the user and product tables, not the dependent tables cart and cartItem.
+// NOTE: Runs slowly. Do not use with large seeds.
 async function initAllTables() {
-  try {
-    // users
-    await prisma.user.deleteMany();
-    userSeed();
-    console.log(await prisma.user.findMany());
-    // products
-    await prisma.product.deleteMany();
-    productSeed();
-    console.log(await prisma.product.findMany());
-    // cart (todo)
-    // cartItem (todo)
-  }
-  catch (error) {
-    console.error(error);
-    throw error;
-  };
+  await userSeed();
+  await productSeed();
+  await cartSeed();
+  await cartItemSeed();
 };
 
 initAllTables();
