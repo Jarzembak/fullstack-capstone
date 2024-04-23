@@ -1,0 +1,26 @@
+nav {
+    width:100%;
+    display: flex;
+    justify-content: flex-end;
+    top:0;
+}
+
+nav > :first-child{
+    position: absolute;
+    left: 0;
+}
+
+nav *{
+    padding:4px;
+    margin:4px;
+    border:1px solid rgba(0,0,0,0)
+}
+
+nav *:hover{
+    border: 1px solid black;
+}
+
+#content{
+    padding:8px;
+    height: 100%;
+}

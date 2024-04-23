@@ -1,0 +1,8 @@
+label {
+    display: flex;
+    width: 98vw;
+}
+
+input#SearchProducts {
+    width: inherit;
+}
