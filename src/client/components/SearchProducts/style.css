@@ -1,8 +1,9 @@
-label {
+
+#SearchProducts > label {
     display: flex;
     width: 98vw;
 }
 
-input#SearchProducts {
+#SearchProducts input:first-child{
     width: inherit;
 }

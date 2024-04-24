@@ -38,7 +38,7 @@ const Register = () => {
     };
 
     return (
-        <div>
+        
             <form onSubmit={handleSubmit} id="RegisterUser">
                 <h2>Register</h2>
                 <label><span>First Name</span><input name="firstName" onChange={handleFieldChange} /></label>
@@ -50,10 +50,8 @@ const Register = () => {
                 <label><span>Street Address</span><input name="streetAddress" onChange={handleFieldChange} /></label>
                 <label><span>City</span><input name="city" onChange={handleFieldChange} /></label>
                 <label><span>Zip Code</span><input name="zipCode" onChange={handleFieldChange} /></label>
-                <button type='submit'>Register</button>
+                <input type='submit' value="Register"></input>
             </form>
-            {/* <p>{message}</p> */}
-        </div>
     );
 };
 

@@ -3,8 +3,8 @@ import { useSearchParams,useNavigate } from "react-router-dom"
 const SearchProducts = ({submit:handleSubmit }) => {
     return (
         <>
-            <form onSubmit={handleSubmit}>
-                <label >Search<input id="SearchProducts" name="q" /><input type="submit" value="Go" /></label>
+            <form  id="SearchProducts"  onSubmit={handleSubmit}>
+                <label >Search<input name="q" /><input type="submit" value="Go" /></label>
             </form>
         </>
     );
