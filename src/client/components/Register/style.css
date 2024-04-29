@@ -1,0 +1,34 @@
+#RegisterUser {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 12px;
+}
+
+#RegisterUser h2{
+    text-align: center;
+    text-decoration: underline;
+}
+
+#RegisterUser label {
+    width:100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 4px;
+    align-items: center;
+}
+
+#RegisterUser span {
+    width: 100%;
+    text-align: center;
+}
+
+#RegisterUser input {
+    margin: 0 4px;
+}
+
+#RegisterUser [type='submit']{
+    width:auto;
+}
