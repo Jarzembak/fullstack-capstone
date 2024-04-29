@@ -14,47 +14,54 @@ datasource db {
 }
 
 model user {
-  userId          Int       @id @default(autoincrement())
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  firstName       String    @db.VarChar(20)
-  lastName        String    @db.VarChar(20)
-  username        String    @db.VarChar(20)
-  password        String    @db.VarChar(255)
-  email           String    @db.VarChar(255)
-  streetAddress   String    @db.VarChar(255)
-  billingAddress  String    @db.VarChar(255)
-  phone           String    @db.VarChar(255)
+  userId          Int         @id @default(autoincrement())
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  isAdmin         Boolean     @default(false)
+  isGuest         Boolean     @default(false)
+  firstName       String      @db.VarChar(255)
+  lastName        String      @db.VarChar(255)
+  username        String      @db.VarChar(255)
+  password        String      @db.VarChar(255)
+  email           String      @db.VarChar(255)
+  streetAddress   String      @db.VarChar(255)
+  city            String      @db.VarChar(255)
+  zipcode         String      @db.VarChar(255)
+  billingAddress  String?     @db.VarChar(255)
+  billingCity     String?     @db.VarChar(255)
+  billingZipcode  String?     @db.VarChar(255)
+  phone           String      @db.VarChar(255)
   cart            cart[]
 }
 
 model product {
-  productId       Int       @id @default(autoincrement())
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  isVisible       Boolean   @default(false)
-  imageUrl        String    @db.VarChar(255)
-  description     String    @db.VarChar(255)
-  price           Decimal   @db.Decimal(2,2)
+  productId       Int         @id @default(autoincrement())
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  name            String      @db.VarChar(255)
+  isVisible       Boolean     @default(false)
+  imageUrl        String      @db.VarChar(255)
+  description     String      @db.VarChar(255)
+  price           Decimal     @db.Money
   cartItem        cartItem[]
 }
 
 model cart {
-  cartId          Int       @id @default(autoincrement())
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  cartStatus      String    @db.VarChar(255)
-  userId          Int     
-  user            user      @relation(fields: [userId], references: [userId])
+  cartId          Int         @id @default(autoincrement())
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  cartStatus      String      @db.VarChar(255)
+  userId          Int         
+  user            user        @relation(fields: [userId], references: [userId])
   cartItems       cartItem[]
 }
 
 model cartItem {
   productId       Int
-  product         product   @relation(fields: [productId], references: [productId])
+  product         product     @relation(fields: [productId], references: [productId])
   cartId          Int
-  cart            cart      @relation(fields: [cartId], references: [cartId])
+  cart            cart        @relation(fields: [cartId], references: [cartId])
   @@id([productId, cartId])
   quantity        Int
-  price           Decimal   @db.Decimal(2,2)
+  price           Decimal     @db.Money
 }
