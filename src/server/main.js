@@ -1,22 +1,19 @@
-require('dotenv').config()
+const express = require("express");
+const ViteExpress = require("vite-express");
+const path = require("path");
 
-const express = require('express');
-const router = require('vite-express');
 const app = express();
 
-const bodyParser = require('body-parser')
-app.use(bodyParser.json());
+app.use(express.json({limit: "200mb"}));
+app.use(express.urlencoded({limit: "200mb", extended: true, parameterLimit:50000}));
+app.use(express.text({limit:'200mb'}));
 
-app.use(express.static('public'))
+app.use("/", express.static(path.join(__dirname, "public")));
 
-const db = require('./db/client')
-db.connect()
+app.use("/api", require("./api"));
+// app.use("/auth", require("./auth"))
 
-const apiRouter = require('./api');
-app.use('/api', apiRouter);
-
-router.listen(app, 3000, () =>
-  console.log('Server is listening on port 3000...')
+// backend routes
+const server = ViteExpress.listen(app, process.env.PORT||3000, () =>
+  console.log("Server is listening on port 3000...")
 );
-
-module.exports = router;

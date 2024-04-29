@@ -1,4 +1,4 @@
-// To fully drop and reseed tables, run: npx prisma migrate reset
+// To fully drop and reseed tables, run this command: npx prisma migrate reset
 const { PrismaClient } = require("@prisma/client");
 const { faker } = require("@faker-js/faker");
 
