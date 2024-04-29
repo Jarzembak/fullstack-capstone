@@ -99,7 +99,7 @@ async function cartItemSeed() {
           cartId: carts[i].cartId,
           productId: products[randomInt].productId,
           price: products[randomInt].price,
-          quantity: Math.floor(Math.random() * 15)
+          quantity: Number(Math.floor(Math.random() * 15))
         }
       });
     }
@@ -116,6 +116,8 @@ async function initAllTables() {
   await userSeed();
   await productSeed();
   await cartSeed();
+  await cartItemSeed();
+  await cartItemSeed();
   await cartItemSeed();
 };
 

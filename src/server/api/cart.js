@@ -43,14 +43,17 @@ router.get('/:userId', async (req, res, next) => {
     }
 });
 
-// GET 'current' cart by userId in request
+// GET 'current' cart by userId in request, with all associated cartItems
 // There should be ONLY ONE with cartStatus 'current'
 router.get('/:userId/current', async (req, res, next) => {
     try {
-        const result = await prisma.cart.findUnique({
+        const result = await prisma.cart.findFirst({
             where: {
                 userId: Number(req.params.userId),
                 cartStatus: 'current',
+            },
+            include: {
+                cartItems: true,
             },
         });
         res.send(result);
