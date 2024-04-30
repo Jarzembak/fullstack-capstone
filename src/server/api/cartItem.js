@@ -13,21 +13,6 @@ router.get('/', async (req, res, next) => {
     }
 })
 
-// GET cartItems by cartId
-router.get('/:cartId', async (req, res, next) => {
-    try {
-        const result = await prisma.cartItem.findMany({
-            where: {
-                cartId: Number(req.params.cartId),
-            },
-        });
-        res.send(result);
-    }
-    catch (error) {
-        next(error)
-    }
-});
-
 // TODO - routes requiring authentication
 
 module.exports = router;

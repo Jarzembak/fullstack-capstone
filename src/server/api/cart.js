@@ -9,9 +9,9 @@ router.get('/', async (req, res, next) => {
         const result = await prisma.cart.findMany();
         res.send(result);
     } catch (error) {
-        next(error)
-    }
-})
+        next(error);
+    };
+});
 
 // GET cart by cartId in request
 router.get('/:cartId', async (req, res, next) => {
@@ -24,43 +24,26 @@ router.get('/:cartId', async (req, res, next) => {
         res.send(result);
     }
     catch (error) {
-        next(error)
-    }
+        next(error);
+    };
 });
 
-// GET carts by userId in request
-router.get('/:userId', async (req, res, next) => {
-    try {
-        const result = await prisma.cart.findMany({
-            where: {
-                userId: Number(req.params.userId),
-            },
-        });
-        res.send(result);
-    }
-    catch (error) {
-        next(error)
-    }
-});
-
-// GET 'current' cart by userId in request, with all associated cartItems
-// There should be ONLY ONE with cartStatus 'current'
-router.get('/:userId/current', async (req, res, next) => {
+// GET cart by ID in request, with all cartItems associated with that ID
+router.get(':cartId/items', async (req, res, next) => {
     try {
         const result = await prisma.cart.findFirst({
             where: {
-                userId: Number(req.params.userId),
-                cartStatus: 'current',
+                cartId: Number(req.params.cartId),
             },
             include: {
-                cartItems: true,
+                cartitems: true,
             },
         });
         res.send(result);
     }
     catch (error) {
-        next(error)
-    }
+        next(error);
+    };
 });
 
 // TODO - routes requiring authentication
