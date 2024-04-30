@@ -6,7 +6,7 @@ import { createElement, useEffect, useState } from 'react';
 const Products = () => {
     const [query, setQuery] = useSearchParams();
     const navigate = useNavigate();
-    const [products, setProducts] = useState();
+    const [products, setProducts] = useState(null);
 
     useEffect(() => {
         getProducts();
@@ -40,7 +40,7 @@ const Products = () => {
         <>
             <SearchProducts submit={handleSubmit} />
             Some Products with a name matching {query.get("q")}
-            {products.length ? products.reduce((arr, { isVisible, name, price, productId, imageUrl, description }) => {
+            {products ? products.reduce((arr, { isVisible, name, price, productId, imageUrl, description }) => {
                 let product = createElement("div", {
                     key: productId, onClick: () => {
                         navigate(`/Products/${productId}`)
