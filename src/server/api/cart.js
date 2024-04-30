@@ -46,6 +46,44 @@ router.get(':cartId/items', async (req, res, next) => {
     };
 });
 
+// POST a new cart and set cartStatus to 'current'
+// Should be used after checkout
+// The old cart's status should be set to 'processing' before this
+router.post('/', async (req, res, next) => {
+    try {
+        const result = await prisma.cart.create({
+            data: {
+                cartStatus: 'current',
+                userId: req.body.userId,
+                cartItems: req.body.cartItems,
+            },
+        });
+        res.send(result);
+    }
+    catch (error) {
+        next(error);
+    };
+});
+
+// PUT cart data into an existing cart
+router.put('/:cartId', async (req, res, next) => {
+    try {
+        const result = await prisma.user.update({
+            where: {
+                cartId: Number(req.params.cartId),
+            },
+            data: {
+                cartStatus: req.body.cartStatus,
+                cartItems: req.body.cartItems,
+            },
+        });
+        res.send(result);
+    }
+    catch (error) {
+        next(error);
+    };
+});
+
 // TODO - routes requiring authentication
 
 module.exports = router;

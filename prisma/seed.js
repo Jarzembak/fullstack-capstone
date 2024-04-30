@@ -76,7 +76,7 @@ async function cartSeed() {
       await prisma.cart.create({
         data: {
           userId: users[i].userId,
-          cartStatus: "order complete"
+          cartStatus: "complete"
         }
       });
     }

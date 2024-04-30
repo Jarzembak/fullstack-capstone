@@ -7,17 +7,16 @@ For the locally hosted database, the base URL is "localhost:3000/api" followed b
 
 Each table in the database schema is considered a resource. The resoruces include:
 
-/user
-/product
-/cart
-/cartitem
+/users
+/products
+/carts
+/cart-items
 
 Note: Some routes may be restricted after auth is added.
 
 ------------------------------
-GET endpoints
+Endpoints - General
 ------------------------------
-
 GET /<resource>
 - Returns the complete table for the requested resource.
 - This may be used for any resource.
@@ -26,19 +25,46 @@ GET /<resource>/<resourceId>
 - Returns the resource with the primary key (ID) in the request.
 - This may be used for any resoruce EXCEPT cartItem, which has no primary key.
 
-GET /user/<userId>/cart/current
+------------------------------
+Endpoints - User
+------------------------------
+GET /users/<userId>/cart
 - Returns a cart for the given user ID number with cartStatus 'current'.
 - For each user, there should only be one cart with cartStatus set to 'current' at a time.
 - Also returns cartItems associated with the cart.
 
-GET /user/<userId>/cart/history
+GET /users/<userId>/cart/history
 - Returns all carts for the given user ID number.
 - Effectively, this looks up the user's order history.
 - Also returns the cartItems associated with each cart.
 
+POST /user
+- Create a new user.
+- Role flags such as isAdmin default to false, and should be adjusted after creation.
+
+PUT /user/<userId>
+- Updates the data of a single user ID.
+- The request body must contain a fully formed user object with all required fields, changed or not.
+    * For later versions: there may be a better way.
+- Not currently set up to update roles.
+
+------------------------------
+Endpoints - Cart
+------------------------------
 GET /cart/<cartId>/items
 - Returns all cartItems associated with the cart ID number.
-- This should be used for administrative purposes; users will normally access their carts through their accounts.
+- For administrative purposes only; users will normally access their carts through their accounts.
+
+POST /cart
+- Creates a new cart.
+- Must be used AFTER checkout, with the previous cart's cartStatus changed from 'current'.
+- Assigns 'current' cartStatus automatically.
+
+PUT /cart/<cartId>
+- Updates the data of a single cart ID.
+- A cart's user never changes.
+- Remember to update cartItem quantities separately.
+
 
 
 

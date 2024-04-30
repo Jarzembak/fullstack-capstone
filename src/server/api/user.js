@@ -30,7 +30,7 @@ router.get('/:userId', async (req, res, next) => {
 
 // GET userId's cart with cartStatus 'current', with associated cartItems
 // There should be ONLY ONE with cartStatus 'current'
-router.get('/:userId/cart/current', async (req, res, next) => {
+router.get('/:userId/cart', async (req, res, next) => {
     try {
         const result = await prisma.cart.findFirst({
             where: {
@@ -56,7 +56,7 @@ router.get('/:userId/cart/history', async (req, res, next) => {
                 userId: Number(req.params.userId),
             },
             include: {
-                cartitems: true,
+                cartItems: true,
             },
         });
         res.send(result);
@@ -66,6 +66,63 @@ router.get('/:userId/cart/history', async (req, res, next) => {
     };
 });
 
+// POST a new user
+router.post('/', async (req, res, next) => {
+    try {
+        const result = await prisma.user.create({
+            data: {
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                username: req.body.username,
+                password: req.body.password,
+                email: req.body.email,
+                streetAddress: req.body.streetAddress,
+                city: req.body.city,
+                zipcode: req.body.zipcode,
+                billingAddress: req.body.billingAddress,
+                billingCity: req.body.billingCity,
+                billingZipcode: req.body.billingZipcode,
+                phone: req.body.phone,
+            },
+        });
+        res.send(result);
+    }
+    catch (error) {
+        next(error);
+    };
+});
+
+
+// PUT user data into an existing user
+router.put('/:userId', async (req, res, next) => {
+    try {
+        const result = await prisma.user.update({
+            where: {
+                userId: Number(req.params.userId),
+            },
+            data: {
+                isAdmin: req.body.isAdmin,
+                isGuest: req.body.isGuest,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                username: req.body.username,
+                password: req.body.password,
+                email: req.body.email,
+                streetAddress: req.body.streetAddress,
+                city: req.body.city,
+                zipcode: req.body.zipcode,
+                billingAddress: req.body.billingAddress,
+                billingCity: req.body.billingCity,
+                billingZipcode: req.body.billingZipcode,
+                phone: req.body.phone,
+            },
+        });
+        res.send(result);
+    }
+    catch (error) {
+        next(error);
+    };
+});
 
 // TODO - authentication
 
