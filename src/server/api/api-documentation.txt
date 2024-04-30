@@ -9,7 +9,7 @@ Each table in the database schema is considered a resource. The resoruces includ
 
 /users
 /products
-/carts
+/cart
 /cart-items
 
 Note: Some routes may be restricted after auth is added.
