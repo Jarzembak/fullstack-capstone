@@ -6,54 +6,53 @@ import { createElement, useEffect, useState } from 'react';
 const Products = () => {
     const [query, setQuery] = useSearchParams();
     const navigate = useNavigate();
-    const [products, setProducts] = useState(null);
+    const [products, setProducts] = useState([]);
 
     useEffect(() => {
         getProducts();
     }, [])
 
-    console.log("Current Query", ...query)
     if (query.get("q").trim() == "") {
         navigate("/")
     }
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
-
         setQuery([...new FormData(evt.target)]);
-
     }
 
     const getProducts = async () => {
         try {
             const req = await fetch("/api/product");
             const res = await req.json();
+            console.log(res)
             setProducts(res)
-            console.log(products[0], products)
         }
         catch (err) {
             console.log(err)
         }
     }
 
+    const renderProducts = products.map(({ isVisible, name, price, productId, imageUrl }) => {
+        return <div className="product" key={productId} onClick={() => navigate(`/Products/${productId}`)}>
+            <img src={imageUrl} alt={name}></img>
+            <h4>{name}</h4>
+            <p>{price}</p>
+        </div>
+    })
+
+    const catalogNavi = <div className="catalog_navi">
+        <button className="button prevPage">Previous Page</button>
+        <button className='button nextPage'>Next Page</button>
+
+    </div>
+
     return (
         <>
             <SearchProducts submit={handleSubmit} />
             Some Products with a name matching {query.get("q")}
-            {products ? products.reduce((arr, { isVisible, name, price, productId, imageUrl, description }) => {
-                let product = createElement("div", {
-                    key: productId, onClick: () => {
-                        navigate(`/Products/${productId}`)
-                    }
-                }, [
-                    <img src={imageUrl} alt={name}></img>,
-                    <h4>{name}</h4>,
-                    <p>{price}</p>
-                ]);
-
-                isVisible || true ? arr.push(product) : "";
-                return arr;
-            }, []) : "Nothing to show"}
+            <div id="products_catalog">{products.length ? renderProducts : <>Nothing to show</>}</div>
+            {catalogNavi}
         </>
     );
 };
