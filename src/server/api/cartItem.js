@@ -13,35 +13,24 @@ router.get('/', async (req, res, next) => {
     }
 })
 
-// GET cartItems by cartId
-router.get('/:cartId', async (req, res, next) => {
+/*
+router.post('/', async (req, res, next) => {
     try {
-        const result = await prisma.cartItem.findMany({
-            where: {
-                cartId: Number(req.params.cartId),
+        const result = await prisma.cartItem.create({
+            data: {
+                productId: req.body.productId,
+                cartId: req.body.cartId,
+                quantity: req.body.quantity,
+                price: req.body.price
             },
         });
         res.send(result);
     }
     catch (error) {
-        next(error)
-    }
+        next(error);
+    };
 });
-
-// GET cartItems by userId
-router.get('/:userId', async (req, res, next) => {
-    try {
-        const result = await prisma.cartItem.findMany({
-            where: {
-                userId: Number(req.params.userId),
-            },
-        });
-        res.send(result);
-    }
-    catch (error) {
-        next(error)
-    }
-});
+*/
 
 // TODO - routes requiring authentication
 

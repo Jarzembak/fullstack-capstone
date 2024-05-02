@@ -9,9 +9,9 @@ router.get('/', async (req, res, next) => {
         const result = await prisma.cart.findMany();
         res.send(result);
     } catch (error) {
-        next(error)
-    }
-})
+        next(error);
+    };
+});
 
 // GET cart by cartId in request
 router.get('/:cartId', async (req, res, next) => {
@@ -24,40 +24,64 @@ router.get('/:cartId', async (req, res, next) => {
         res.send(result);
     }
     catch (error) {
-        next(error)
-    }
+        next(error);
+    };
 });
 
-// GET carts by userId in request
-router.get('/:userId', async (req, res, next) => {
+// GET cart by ID in request, with all cartItems associated with that ID
+router.get(':cartId/items', async (req, res, next) => {
     try {
-        const result = await prisma.cart.findMany({
+        const result = await prisma.cart.findFirst({
             where: {
-                userId: Number(req.params.userId),
+                cartId: Number(req.params.cartId),
+            },
+            include: {
+                cartitems: true,
             },
         });
         res.send(result);
     }
     catch (error) {
-        next(error)
-    }
+        next(error);
+    };
 });
 
-// GET 'current' cart by userId in request
-// There should be ONLY ONE with cartStatus 'current'
-router.get('/:userId/current', async (req, res, next) => {
+// POST a new cart and set cartStatus to 'current'
+// Should be used after checkout
+// The old cart's status should be set to 'processing' before this
+router.post('/', async (req, res, next) => {
     try {
-        const result = await prisma.cart.findUnique({
-            where: {
-                userId: Number(req.params.userId),
+        const result = await prisma.cart.create({
+            data: {
                 cartStatus: 'current',
+                userId: req.body.userId,
+                cartItems: req.body.cartItems,
             },
         });
         res.send(result);
     }
     catch (error) {
-        next(error)
+        next(error);
+    };
+});
+
+// PUT cart data into an existing cart
+router.put('/:cartId', async (req, res, next) => {
+    try {
+        const result = await prisma.user.update({
+            where: {
+                cartId: Number(req.params.cartId),
+            },
+            data: {
+                cartStatus: req.body.cartStatus,
+                cartItems: req.body.cartItems,
+            },
+        });
+        res.send(result);
     }
+    catch (error) {
+        next(error);
+    };
 });
 
 // TODO - routes requiring authentication
