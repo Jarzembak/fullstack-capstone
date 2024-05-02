@@ -28,7 +28,7 @@ const ProductDetails = () => {
     const getProduct = async () => {
         console.log("getting Product", productId)
         try {
-            const req = await fetch(`/api/product/${productId}`);
+            const req = await fetch(`/api/products/${productId}`);
             const res = await req.json();
             setProduct(res)
             console.log(product)
