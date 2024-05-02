@@ -4,7 +4,7 @@ const {PrismaClient} = require("@prisma/client");
 const prisma = new PrismaClient();
 
 // GET all users
-router.get('/', async (req, res, next) => {
+router.get('/', async (req, res) => {
     try {
         const result = await prisma.user.findMany();
         res.send(result);
@@ -14,7 +14,7 @@ router.get('/', async (req, res, next) => {
 })
 
 // GET user by userId
-router.get('/:userId', async (req, res, next) => {
+router.get('/:userId', async (req, res) => {
     try {
         const result = await prisma.user.findUnique({
             where: {
@@ -30,7 +30,7 @@ router.get('/:userId', async (req, res, next) => {
 
 // GET userId's cart with cartStatus 'current', with associated cartItems
 // There should be ONLY ONE with cartStatus 'current'
-router.get('/:userId/cart', async (req, res, next) => {
+router.get('/:userId/cart', async (req, res) => {
     try {
         const result = await prisma.cart.findFirst({
             where: {
@@ -49,7 +49,7 @@ router.get('/:userId/cart', async (req, res, next) => {
 });
 
 // GET all carts by userId in request, with associated cartItems
-router.get('/:userId/cart/history', async (req, res, next) => {
+router.get('/:userId/history', async (req, res) => {
     try {
         const result = await prisma.cart.findMany({
             where: {
@@ -67,7 +67,7 @@ router.get('/:userId/cart/history', async (req, res, next) => {
 });
 
 // POST a new user
-router.post('/', async (req, res, next) => {
+router.post('/', async (req, res) => {
     try {
         const result = await prisma.user.create({
             data: {
@@ -92,9 +92,8 @@ router.post('/', async (req, res, next) => {
     };
 });
 
-
 // PUT user data into an existing user
-router.put('/:userId', async (req, res, next) => {
+router.put('/:userId', async (req, res) => {
     try {
         const result = await prisma.user.update({
             where: {

@@ -19,19 +19,19 @@ model user {
   updatedAt       DateTime    @updatedAt
   isAdmin         Boolean     @default(false)
   isGuest         Boolean     @default(false)
-  firstName       String      @db.VarChar(255)
-  lastName        String      @db.VarChar(255)
+  firstName       String?     @db.VarChar(255)
+  lastName        String?     @db.VarChar(255)
   username        String      @db.VarChar(255)
   password        String      @db.VarChar(255)
   email           String      @db.VarChar(255)
-  streetAddress   String      @db.VarChar(255)
-  city            String      @db.VarChar(255)
-  zipcode         String      @db.VarChar(255)
+  streetAddress   String?     @db.VarChar(255)
+  city            String?     @db.VarChar(255)
+  zipcode         String?     @db.VarChar(255)
   billingAddress  String?     @db.VarChar(255)
   billingCity     String?     @db.VarChar(255)
   billingZipcode  String?     @db.VarChar(255)
-  phone           String      @db.VarChar(255)
-  cart            cart[]
+  phone           String?     @db.VarChar(255)
+  carts           cart[]
 }
 
 model product {
@@ -43,7 +43,7 @@ model product {
   imageUrl        String      @db.VarChar(255)
   description     String      @db.VarChar(255)
   price           Decimal     @db.Money
-  cartItem        cartItem[]
+  cartItems       cartItem[]
 }
 
 model cart {

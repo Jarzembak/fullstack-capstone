@@ -9,10 +9,11 @@ Each table in the database schema is considered a resource. The resoruces includ
 
 /users
 /products
-/cart
+/carts
 /cart-items
 
-Note: Some routes may be restricted after auth is added.
+Notes:
+- Some routes may be restricted after auth is added.
 
 ------------------------------
 Endpoints - General
@@ -24,6 +25,19 @@ GET /<resource>
 GET /<resource>/<resourceId>
 - Returns the resource with the primary key (ID) in the request.
 - This may be used for any resoruce EXCEPT cartItem, which has no primary key.
+
+POST /<resource>
+- Creates a new row for a given resource.
+    * Carts and cartItems have special cases below.
+- Accepts an object with all required fields (excluding primary key) in the request.
+- Non-primary keys and IDs should be included in the request,
+- Currently, cartItems are created and updated through /carts routes only.
+- Certain keys (such as role flags for Users) can only be changed after creation.
+
+PUT /<resource>/<resourceId>
+- Updates the row for a given resource based on the primary key.
+- Accepts an object with all required fields (excluding primary key) in the request.
+
 
 ------------------------------
 Endpoints - User
@@ -38,33 +52,57 @@ GET /users/<userId>/cart/history
 - Effectively, this looks up the user's order history.
 - Also returns the cartItems associated with each cart.
 
-POST /user
-- Create a new user.
-- Role flags such as isAdmin default to false, and should be adjusted after creation.
-
-PUT /user/<userId>
-- Updates the data of a single user ID.
-- The request body must contain a fully formed user object with all required fields, changed or not.
-    * For later versions: there may be a better way.
-- Not currently set up to update roles.
-
 ------------------------------
 Endpoints - Cart
 ------------------------------
-GET /cart/<cartId>/items
-- Returns all cartItems associated with the cart ID number.
-- For administrative purposes only; users will normally access their carts through their accounts.
 
-POST /cart
+GET /carts/<cartId>/items
+- Returns all cartItems associated with the cart ID number.
+
+GET /carts/<userId>/cart
+- Returns the user's first cart with cartStatus: 'current'.
+- Also returns the cartItems associated with the cart.
+- There should only ever be one cart per user with cartStatus: 'current'.
+
+GET /carts/<userId>/history
+- Returns all carts (with cartItems) belonging to the user.
+- Essentially functions as the user's order history.
+
+POST /carts
 - Creates a new cart.
-- Must be used AFTER checkout, with the previous cart's cartStatus changed from 'current'.
+- Should be called AFTER checkout, with the previous cart's cartStatus changed from 'current'.
 - Assigns 'current' cartStatus automatically.
 
-PUT /cart/<cartId>
+PUT /carts/<cartId>
 - Updates the data of a single cart ID.
-- A cart's user never changes.
-- Remember to update cartItem quantities separately.
+- A cart's user never changes, so this is only used to update cartStatus.
 
+---------------
 
+POST /carts/item
+- Creates a cartItem with the cartId, productId, and data included in the request.
+- Should be called when the user add a new item (product) to their cart.
+- The necessary keys (cartId and productId) go in the req.body.
 
+PUT /carts/item
+- Updates the cartItem with the cartId and productId included in req.body.
 
+DELETE /carts/item
+- Deletes the cartItem with the cartId and productId included in req.body.
+- Responds with status 204 when successful.
+
+DELETE /carts/item/<cartId>
+- Deletes ALL cartItems with the matching cartId param.
+- Used to clear a user's cart completely.
+- Responds with status 204 when successful.
+* TODO: needs validation to prevent carts for completed orders from being changed.
+
+------------------------------
+Endpoints - Product
+------------------------------
+No unique API routes yet.
+
+------------------------------
+Endpoints - CartItem
+------------------------------
+Depreciated; mostly merged into Cart routes.
