@@ -12,20 +12,12 @@ const Products = () => {
         getProducts();
     }, [])
 
-    if (query.get("q").trim() == "") {
-        navigate("/")
-    }
 
-    const handleSubmit = (evt) => {
-        evt.preventDefault();
-        setQuery([...new FormData(evt.target)]);
-    }
 
     const getProducts = async () => {
         try {
             const req = await fetch("/api/products");
             const res = await req.json();
-            console.log(res)
             setProducts(res)
         }
         catch (err) {
@@ -37,7 +29,7 @@ const Products = () => {
         return <div className="product" key={productId} onClick={() => navigate(`/Products/${productId}`)}>
             <img src={imageUrl} alt={name}></img>
             <h4>{name}</h4>
-            <p>{price}</p>
+            <h3>${Number(price).toFixed(2)}</h3>
         </div>
     })
 
@@ -49,7 +41,7 @@ const Products = () => {
 
     return (
         <>
-            <SearchProducts submit={handleSubmit} />
+            <SearchProducts />
             Some Products with a name matching {query.get("q")}
             <div id="products_catalog">{products.length ? renderProducts : <>Nothing to show</>}</div>
             {catalogNavi}

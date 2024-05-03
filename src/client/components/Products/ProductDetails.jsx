@@ -13,11 +13,6 @@ const ProductDetails = () => {
         getProduct();
     }, [])
 
-    console.log("Current Query", ...query)
-    // if (query.get("q").trim() == "") {
-    //     navigate("/")
-    // }
-
     const handleSubmit = (evt) => {
         evt.preventDefault();
 
@@ -26,12 +21,10 @@ const ProductDetails = () => {
     }
 
     const getProduct = async () => {
-        console.log("getting Product", productId)
         try {
             const req = await fetch(`/api/products/${productId}`);
             const res = await req.json();
             setProduct(res)
-            console.log(product)
         }
         catch (err) {
             console.log(err)
