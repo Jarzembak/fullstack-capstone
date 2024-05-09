@@ -1,5 +1,9 @@
 import './style.css';
 import SearchProducts from "../SearchProducts";
+
+import { useGetProductsQuery } from '../../services/products'
+
+
 import { useSearchParams, useNavigate } from "react-router-dom"
 import { createElement, useEffect, useState } from 'react';
 // import ProductDetails from './ProductDetails';
@@ -9,9 +13,17 @@ const Products = () => {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        getProducts();
+        // getProducts();
     }, [])
 
+    const { data, error, isLoading } = useGetProductsQuery()
+
+
+    if (isLoading) {
+        console.log("we are loading")
+    } else {
+        console.log("the data is here", data)
+    }
 
 
     const getProducts = async () => {
