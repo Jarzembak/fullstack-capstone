@@ -4,6 +4,8 @@
     justify-content: space-around;
     text-align: center;
     padding: 1% 8%;
+    column-gap: 1%;
+    row-gap: 1%;
 }
 
 #products_catalog .product img {
