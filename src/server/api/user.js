@@ -2,8 +2,11 @@ const express = require('express');
 const router = express.Router();
 const {PrismaClient} = require("@prisma/client");
 const prisma = new PrismaClient();
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 // GET all users
+// !! Route is not secure !!
 router.get('/', async (req, res) => {
     try {
         const result = await prisma.user.findMany();
@@ -14,7 +17,8 @@ router.get('/', async (req, res) => {
 })
 
 // GET user by userId
-router.get('/:userId', async (req, res) => {
+// !! Route is not secure !!
+router.get('/:userId', async (req, res, next) => {
     try {
         const result = await prisma.user.findUnique({
             where: {
@@ -29,8 +33,9 @@ router.get('/:userId', async (req, res) => {
 });
 
 // GET userId's cart with cartStatus 'current', with associated cartItems
-// There should be ONLY ONE with cartStatus 'current'
-router.get('/:userId/cart', async (req, res) => {
+// ... AND the products associated with each cartItem
+// There should be ONLY ONE cart with cartStatus 'current' per user
+router.get('/:userId/cart', require('../auth'), async (req, res, next) => {
     try {
         const result = await prisma.cart.findFirst({
             where: {
@@ -38,7 +43,11 @@ router.get('/:userId/cart', async (req, res) => {
                 cartStatus: 'current',
             },
             include: {
-                cartitems: true,
+                cartitems: {
+                    include: {
+                        product: true,
+                    },
+                },
             },
         });
         res.send(result);
@@ -49,7 +58,7 @@ router.get('/:userId/cart', async (req, res) => {
 });
 
 // GET all carts by userId in request, with associated cartItems
-router.get('/:userId/history', async (req, res) => {
+router.get('/:userId/history', async (req, res, next) => {
     try {
         const result = await prisma.cart.findMany({
             where: {
@@ -66,15 +75,19 @@ router.get('/:userId/history', async (req, res) => {
     };
 });
 
-// POST a new user
-router.post('/', async (req, res) => {
+// POST a new user (Registration)
+router.post('/', async (req, res, next) => {
+
+    const salt_rounds = 5;
+    const hashedPassword = await bcrypt.hash(req.body.password, salt_rounds);
+
     try {
         const result = await prisma.user.create({
             data: {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 username: req.body.username,
-                password: req.body.password,
+                password: hashedPassword,
                 email: req.body.email,
                 streetAddress: req.body.streetAddress,
                 city: req.body.city,
@@ -85,15 +98,58 @@ router.post('/', async (req, res) => {
                 phone: req.body.phone,
             },
         });
-        res.send(result);
+
+        res.status(201).send(result);
     }
     catch (error) {
         next(error);
     };
 });
 
+// POST user login
+router.post("/login", async (req, res, next)=>{
+    try{
+        const user = await  prisma.user.findUnique({
+            where: {username: req.body.username}
+        })
+
+        if(!user){
+            return res.status(401).send("Invalid Login");
+        }
+
+        const isValid = await bcrypt.compare(req.body.password, user.password);
+
+        if(!isValid){
+            return res.status(401).send("Invalid Login");
+        }
+
+        const token = jwt.sign({id:user.id}, process.env.JWT);
+
+        res.send({
+            token, 
+            user: { // What info is needed here?
+                firstName: user.firstName,
+                lastName: user.lastName,
+                username: user.username,
+                email: user.email,
+                streetAddress: user.streetAddress,
+                city: user.city,
+                zipcode: user.zipcode,
+                billingAddress: user.billingAddress,
+                billingCity: user.billingCity,
+                billingZipcode: user.billingZipcode,
+                phone: user.phone,
+            }
+        })
+
+    }catch(err){
+        next(err);
+    }
+});
+
+
 // PUT user data into an existing user
-router.put('/:userId', async (req, res) => {
+router.put('/:userId', require('../auth'), async (req, res, next) => {
     try {
         const result = await prisma.user.update({
             where: {
@@ -122,7 +178,5 @@ router.put('/:userId', async (req, res) => {
         next(error);
     };
 });
-
-// TODO - authentication
 
 module.exports = router;

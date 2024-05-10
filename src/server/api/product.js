@@ -14,6 +14,28 @@ router.get('/', async (req, res) => {
     }
 })
 
+/* Work in progress: GET the first 10 products, sorted by name (ascending)
+req.body should have:
+{
+    pagination: Number // The number of results per page
+    skipToResult: Number // (pagination * <number of the page you want - 1>)
+    orderBy: parameter // The field of the object you want to search by
+}
+
+router.get('/search', async (req, res, next) => {
+    try {
+        const result = await prisma.product.findMany({
+            orderBy: {
+                name: 'asc',
+            },
+        });
+        res.send(result);
+    } catch (error) {
+        next(error)
+    }
+})
+*/
+
 // GET product by productId in request
 router.get('/:productId', async (req, res) => {
     try {

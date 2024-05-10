@@ -5,7 +5,7 @@ const { Decimal } = require('@prisma/client/runtime/library');
 const prisma = new PrismaClient();
 
 // GET all carts
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
         const result = await prisma.cart.findMany();
         res.send(result);
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET cart by cartId in request
-router.get('/:cartId', async (req, res) => {
+router.get('/:cartId', async (req, res, next) => {
     try {
         const result = await prisma.cart.findUnique({
             where: {
@@ -30,7 +30,7 @@ router.get('/:cartId', async (req, res) => {
 });
 
 // GET cart by ID in request, with all cartItems associated with that ID
-router.get('/:cartId/all-items', async (req, res) => {
+router.get('/:cartId/all-items', async (req, res, next) => {
     try {
         const result = await prisma.cart.findFirst({
             where: {
@@ -47,10 +47,33 @@ router.get('/:cartId/all-items', async (req, res) => {
     };
 });
 
+// GET cart by ID in request, with all cartItems associated with that ID
+// ... AND each product associated with each cartItem
+router.get('/:cartId/all-items-and-products', async (req, res, next) => {
+    try {
+        const result = await prisma.cart.findFirst({
+            where: {
+                cartId: Number(req.params.cartId),
+            },
+            include: {
+                cartItems: {
+                    include: {
+                        product: true,
+                    },
+                },
+            },
+        });
+        res.send(result);
+    }
+    catch (error) {
+        next(error);
+    };
+});
+
 // POST a new cart and set cartStatus to 'current'
 // Should be used after checkout, and cannot be created with cartItems
 // The old cart's cartStatus should be set to 'processing' before this is used
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
     try {
         const result = await prisma.cart.create({
             data: {
@@ -67,7 +90,7 @@ router.post('/', async (req, res) => {
 
 // PUT cart data into an existing cart
 // For now, used only for changing cartStatus
-router.put('/:cartId', async (req, res) => {
+router.put('/:cartId', async (req, res, next) => {
     try {
         const result = await prisma.cart.update({
             where: {
@@ -86,7 +109,7 @@ router.put('/:cartId', async (req, res) => {
 
 // POST cartItem with cart ID
 // Called when adding an item to the cart.
-router.post('/item', async (req, res) => {
+router.post('/item', async (req, res, next) => {
     try {
         const result = await prisma.cartItem.create({
             data: {
@@ -104,7 +127,7 @@ router.post('/item', async (req, res) => {
 });
 
 // PUT cartItem data
-router.put('/item', async (req, res) => {
+router.put('/item', async (req, res, next) => {
     try {
         const result = await prisma.cartItem.update({
             where: {
@@ -126,7 +149,7 @@ router.put('/item', async (req, res) => {
 });
 
 // DELETE cartItem with cartId and productId
-router.delete('/item', async (req, res) => {
+router.delete('/item', async (req, res, next) => {
     try {
         const result = await prisma.cartItem.delete({
             where: {
@@ -143,7 +166,7 @@ router.delete('/item', async (req, res) => {
 
 // DELETE ALL cartItems with cartId
 // This deletes all cartItems associated with the cartId, clearing the cart
-router.delete('/item/:cartId', async (req, res) => {
+router.delete('/item/:cartId', async (req, res, next) => {
     try {
         const result = await prisma.cartItem.deleteMany({
             where: {
