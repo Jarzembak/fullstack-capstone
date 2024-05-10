@@ -30,26 +30,8 @@ router.get('/:cartId', async (req, res, next) => {
 });
 
 // GET cart by ID in request, with all cartItems associated with that ID
-router.get('/:cartId/all-items', async (req, res, next) => {
-    try {
-        const result = await prisma.cart.findFirst({
-            where: {
-                cartId: Number(req.params.cartId),
-            },
-            include: {
-                cartitems: true,
-            },
-        });
-        res.send(result);
-    }
-    catch (error) {
-        next(error);
-    };
-});
-
-// GET cart by ID in request, with all cartItems associated with that ID
 // ... AND each product associated with each cartItem
-router.get('/:cartId/all-items-and-products', async (req, res, next) => {
+router.get('/:cartId/all-items', async (req, res, next) => {
     try {
         const result = await prisma.cart.findFirst({
             where: {

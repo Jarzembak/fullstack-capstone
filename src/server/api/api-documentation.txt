@@ -16,6 +16,30 @@ Notes:
 - Some routes may be restricted after auth is added.
 
 ------------------------------
+Authentication
+------------------------------
+With the implementation of auth functionality in progress, certain routes require the user to be logged in.
+Here is an example of a route requiring authentication (GET /user/:userId):
+
+// GET user by userId (secure version)
+router.get('/:userId', require('../auth'), async (req, res, next) => {
+    try {
+        const result = await prisma.user.findUnique({
+            where: {
+                userId: Number(req.params.userId),
+            },
+        });
+        res.send(result);
+    }
+    catch (error) {
+        next(error)
+    }
+});
+
+The parameter require('../auth') in the method call takes a json web token, which is returned to the user on login.
+This token should be stored in the client's state data and passed into routes like the above example.
+
+------------------------------
 Endpoints - General
 ------------------------------
 GET /<resource>
@@ -46,6 +70,7 @@ GET /users/<userId>/cart
 - Returns a cart for the given user ID number with cartStatus 'current'.
 - For each user, there should only be one cart with cartStatus set to 'current' at a time.
 - Also returns cartItems associated with the cart.
+    - Each cartItem now also includes the product it represents, based on the productId foreign key.
 
 GET /users/<userId>/cart/history
 - Returns all carts for the given user ID number.
@@ -61,6 +86,7 @@ GET /carts/<cartId>/items
 
 GET /carts/<userId>/cart
 - Returns the user's first cart with cartStatus: 'current'.
+    * Mirrors a user route, 'GET /users/<userId>/cart', but without authentication
 - Also returns the cartItems associated with the cart.
 - There should only ever be one cart per user with cartStatus: 'current'.
 

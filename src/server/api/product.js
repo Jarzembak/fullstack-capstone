@@ -5,12 +5,12 @@ const { Decimal } = require('@prisma/client/runtime/library');
 const prisma = new PrismaClient();
 
 // GET all products
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
         const result = await prisma.product.findMany();
         res.send(result);
     } catch (error) {
-        next(error)
+        next(error);
     }
 })
 
@@ -37,7 +37,7 @@ router.get('/search', async (req, res, next) => {
 */
 
 // GET product by productId in request
-router.get('/:productId', async (req, res) => {
+router.get('/:productId', async (req, res, next) => {
     try {
         const result = await prisma.product.findUnique({
             where: {
@@ -52,7 +52,7 @@ router.get('/:productId', async (req, res) => {
 });
 
 // POST a new product
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
     try {
         const result = await prisma.product.create({
             data: {
@@ -71,7 +71,7 @@ router.post('/', async (req, res) => {
 });
 
 // PUT product data into an existing product
-router.put('/:productId', async (req, res) => {
+router.put('/:productId', async (req, res, next) => {
     try {
         const result = await prisma.product.update({
             where: {
