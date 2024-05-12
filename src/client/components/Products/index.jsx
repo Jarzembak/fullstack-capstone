@@ -2,15 +2,15 @@ import './style.css';
 import SearchProducts from "../SearchProducts";
 import { useGetProductsQuery } from '../../services/products'
 import { useSearchParams, useNavigate } from "react-router-dom"
-// import ProductDetails from './ProductDetails';
+import { useCreateCartItemMutation } from '../../services/cart';
 
 const Products = () => {
     const navigate = useNavigate();
 
     const { data, error, isLoading } = useGetProductsQuery()
+    const [addProductToCart, { data: response, isLoading: addingProductToCart }] = useCreateCartItemMutation();
 
     if (isLoading) {
-        console.log("Still Loading")
         return (<><h1>Loading</h1></>)
     } else {
         const catalogNavi = <div className="catalog_navi">

@@ -1,33 +1,36 @@
 import './style.css';
 import SearchProducts from "../SearchProducts";
-import { useSearchParams, useNavigate, useParams } from "react-router-dom"
+import { useSearchParams, useParams } from "react-router-dom"
 import { useGetProductQuery } from '../../services/products'
+import { useCreateCartItemMutation } from '../../services/cart';
+import { useSelector } from 'react-redux';
 
 
-const ProductDetails = () => {
+const ProductDetails = ({ cart, setCart }) => {
     const [query, setQuery] = useSearchParams();
-    const navigate = useNavigate();
     const { productId } = useParams();
 
 
-    const { data, error, isLoading } = useGetProductQuery(productId)
+    const { data: product, error, isLoading } = useGetProductQuery(productId)
+    const [addProductToCart] = useCreateCartItemMutation();
 
-    const handleSubmit = (evt) => {
-        evt.preventDefault();
-        setQuery([...new FormData(evt.target)]);
+    const handleAddToCartButton = (evt) => {
+        addProductToCart({ ...product, quantity: 1, cartId: cart.cartId }).unwrap().then((success) => {
+            let updatedCart = JSON.parse(JSON.stringify(cart));
+            updatedCart.cartItems.push(success)
+            setCart(updatedCart)
+        }, (error) => {
+            console.log("there was an error addign the item", error)
+        })
+
     }
-
-    const addToCart = () => {
-
-    }
-
     if (isLoading) {
 
     } else {
 
         return (
             <>
-                <SearchProducts submit={handleSubmit} />
+                <SearchProducts />
                 Some Products with a name matching {query.get("q")}
                 {(({ name, price, productId, imageUrl, description }) => <>
                     <div className='productDetails'>
@@ -40,14 +43,13 @@ const ProductDetails = () => {
                             <p className='description'>{description}</p>
                             <div className="price">
                                 <span   >${Number(price).toFixed(2)}</span>
-                                <button className="button addToCart" onClick={addToCart}>Add to cart</button>
+                                <button className="button addToCart" onClick={handleAddToCartButton}>Add to cart</button>
                             </div>
                         </div>
 
                     </div>
-                </>)(data)
+                </>)(product)
                 }
-
             </>
         );
     }

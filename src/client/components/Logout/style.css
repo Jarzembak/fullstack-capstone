@@ -1,0 +1,34 @@
+#Login {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 12px;
+}
+
+#Login h2{
+    text-align: center;
+    text-decoration: underline;
+}
+
+#Login label {
+    width:100%;
+    display: flex;
+    justify-content: space-between;
+    margin: 4px;
+    align-items: center;
+}
+
+#Login span {
+    width: 100%;
+    text-align: center;
+}
+
+#Login input {
+    margin: 0 4px;
+}
+
+#Login [type='submit']{
+    width:auto;
+}

@@ -14,6 +14,26 @@ router.get('/', async (req, res, next) => {
   };
 });
 
+// POST a new cart and set cartStatus to 'current'
+// Should be used after checkout, and cannot be created with cartItems
+// The old cart's cartStatus should be set to 'processing' before this is used
+router.post('/', require("../auth"), async (req, res, next) => {
+  try {
+    const { id: userId } = req.user;
+
+    const result = await prisma.cart.create({
+      data: {
+        cartStatus: 'current',
+        userId,
+      },
+    });
+    res.send(result);
+  }
+  catch (error) {
+    next(error);
+  };
+});
+
 // GET cart by cartId in request
 router.get('/:cartId', async (req, res, next) => {
   try {
@@ -37,7 +57,7 @@ router.get('/:cartId/all-items', async (req, res, next) => {
         cartId: Number(req.params.cartId),
       },
       include: {
-        cartitems: true,
+        cartItems: true,
       },
     });
     res.send(result);
@@ -70,23 +90,7 @@ router.get('/:cartId/all-items-and-products', async (req, res, next) => {
   };
 });
 
-// POST a new cart and set cartStatus to 'current'
-// Should be used after checkout, and cannot be created with cartItems
-// The old cart's cartStatus should be set to 'processing' before this is used
-router.post('/', async (req, res, next) => {
-  try {
-    const result = await prisma.cart.create({
-      data: {
-        cartStatus: 'current',
-        userId: req.body.userId,
-      },
-    });
-    res.send(result);
-  }
-  catch (error) {
-    next(error);
-  };
-});
+
 
 // PUT cart data into an existing cart
 // For now, used only for changing cartStatus

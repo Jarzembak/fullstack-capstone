@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './style.css';
 import { useCreateUserMutation } from '../../services/user';
 
-const Register = () => {
+const Register = (setToken) => {
     const [inputValues, setInputValues] = useState({});
     const handleFieldChange = ({ target }) => {
         setInputValues({ ...inputValues, [target.name]: target.value })
@@ -11,12 +11,13 @@ const Register = () => {
     if (isLoading) {
 
     } else {
-        console.log("Form data", data)
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        createUser(inputValues);
+        createUser(inputValues).unwrap().then((success) => {
+
+        });
     };
 
     return (

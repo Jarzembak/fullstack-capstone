@@ -16,30 +16,16 @@ router.get('/', async (req, res) => {
     }
 })
 
-// GET user by userId
-// !! Route is not secure !!
-router.get('/:userId', async (req, res, next) => {
-    try {
-        const result = await prisma.user.findUnique({
-            where: {
-                userId: Number(req.params.userId),
-            },
-        });
-        res.send(result);
-    }
-    catch (error) {
-        next(error)
-    }
-});
 
 // GET userId's cart with cartStatus 'current', with associated cartItems
 // ... AND the products associated with each cartItem
 // There should be ONLY ONE cart with cartStatus 'current' per user
-router.get('/:userId/cart', require('../auth'), async (req, res, next) => {
+router.get('/cart', require('../auth'), async (req, res, next) => {
     try {
+        const { id: userId } = req.user;
         const result = await prisma.cart.findFirst({
             where: {
-                userId: Number(req.params.userId),
+                userId,
                 cartStatus: 'current',
             },
             include: {
@@ -56,6 +42,26 @@ router.get('/:userId/cart', require('../auth'), async (req, res, next) => {
         next(error);
     };
 });
+
+// GET user by userId
+// !! Route is not secure !!
+router.get('/:userId', require('../auth'), async (req, res, next) => {
+    try {
+        const { id: userId } = req.user;
+
+        const result = await prisma.user.findUnique({
+            where: {
+                userId
+            },
+        });
+        res.send(result);
+        console.log("GetUserById", result)
+    }
+    catch (error) {
+        next(error)
+    }
+});
+
 
 // GET all carts by userId in request, with associated cartItems
 router.get('/:userId/history', async (req, res, next) => {
@@ -87,7 +93,7 @@ router.post('/', async (req, res, next) => {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 username: req.body.username,
-                password: hashedPassword,
+                password: req.body.password || hashedPassword,
                 email: req.body.email,
                 streetAddress: req.body.streetAddress,
                 city: req.body.city,
@@ -118,13 +124,13 @@ router.post("/login", async (req, res, next) => {
             return res.status(401).send("Invalid Login");
         }
 
-        const isValid = await bcrypt.compare(req.body.password, user.password);
+        const isValid = req.body.password == user.password || await bcrypt.compare(req.body.password, user.password);
 
         if (!isValid) {
             return res.status(401).send("Invalid Login");
         }
 
-        const token = jwt.sign({ id: user.id }, process.env.JWT);
+        const token = jwt.sign({ id: user.userId }, process.env.JWT);
 
         res.send({
             token,

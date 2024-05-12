@@ -21,7 +21,7 @@ model user {
   isGuest         Boolean     @default(false)
   firstName       String?     @db.VarChar(255)
   lastName        String?     @db.VarChar(255)
-  username        String      @db.VarChar(255)
+  username        String      @unique @db.VarChar(255)
   password        String      @db.VarChar(255)
   email           String      @db.VarChar(255)
   streetAddress   String?     @db.VarChar(255)
