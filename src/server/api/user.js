@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {PrismaClient} = require("@prisma/client");
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -43,7 +43,7 @@ router.get('/:userId/cart', require('../auth'), async (req, res, next) => {
                 cartStatus: 'current',
             },
             include: {
-                cartitems: {
+                cartItems: {
                     include: {
                         product: true,
                     },
@@ -102,31 +102,32 @@ router.post('/', async (req, res, next) => {
         res.status(201).send(result);
     }
     catch (error) {
-        next(error);
+        console.log(error)
+        // next(error);
     };
 });
 
 // POST user login
-router.post("/login", async (req, res, next)=>{
-    try{
-        const user = await  prisma.user.findUnique({
-            where: {username: req.body.username}
+router.post("/login", async (req, res, next) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { username: req.body.username }
         })
 
-        if(!user){
+        if (!user) {
             return res.status(401).send("Invalid Login");
         }
 
         const isValid = await bcrypt.compare(req.body.password, user.password);
 
-        if(!isValid){
+        if (!isValid) {
             return res.status(401).send("Invalid Login");
         }
 
-        const token = jwt.sign({id:user.id}, process.env.JWT);
+        const token = jwt.sign({ id: user.id }, process.env.JWT);
 
         res.send({
-            token, 
+            token,
             user: { // What info is needed here?
                 firstName: user.firstName,
                 lastName: user.lastName,
@@ -142,7 +143,7 @@ router.post("/login", async (req, res, next)=>{
             }
         })
 
-    }catch(err){
+    } catch (err) {
         next(err);
     }
 });

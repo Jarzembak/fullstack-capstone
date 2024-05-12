@@ -180,6 +180,29 @@ router.delete('/item/:cartId', async (req, res, next) => {
   };
 });
 
+// GET cart by ID in request, with all cartItems associated with that ID
+// ... AND each product associated with each cartItem
+router.get('/:cartId/all-items-and-products', async (req, res, next) => {
+  try {
+    const result = await prisma.cart.findFirst({
+      where: {
+        cartId: Number(req.params.cartId),
+      },
+      include: {
+        cartItems: {
+          include: {
+            product: true,
+          },
+        },
+      },
+    });
+    res.send(result);
+  }
+  catch (error) {
+    next(error);
+  };
+});
+
 // TODO - routes requiring authentication
 
 module.exports = router;
