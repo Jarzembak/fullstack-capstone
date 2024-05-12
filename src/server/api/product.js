@@ -5,14 +5,14 @@ const { Decimal } = require("@prisma/client/runtime/library");
 const prisma = new PrismaClient();
 
 // GET all products
-router.get("/", async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const result = await prisma.product.findMany();
     res.send(result);
   } catch (error) {
     next(error);
   }
-});
+})
 
 /* Work in progress: GET the first 10 products, sorted by name (ascending)
 req.body should have:
@@ -37,7 +37,7 @@ router.get('/search', async (req, res, next) => {
 */
 
 // GET product by productId in request
-router.get("/:productId", async (req, res, next) => {
+router.get('/:productId', async (req, res, next) => {
   try {
     const result = await prisma.product.findUnique({
       where: {
@@ -45,13 +45,14 @@ router.get("/:productId", async (req, res, next) => {
       },
     });
     res.send(result);
-  } catch (error) {
-    next(error);
+  }
+  catch (error) {
+    next(error)
   }
 });
 
 // POST a new product
-router.post("/", async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   try {
     const result = await prisma.product.create({
       data: {
@@ -60,16 +61,17 @@ router.post("/", async (req, res, next) => {
         imageUrl: String(req.body.imageUrl),
         description: String(req.body.description),
         price: Decimal(req.body.price),
-      },
+      }
     });
     res.send(result);
-  } catch (error) {
-    next(error);
   }
+  catch (error) {
+    next(error);
+  };
 });
 
 // PUT product data into an existing product
-router.put("/:productId", async (req, res, next) => {
+router.put('/:productId', async (req, res, next) => {
   try {
     const result = await prisma.product.update({
       where: {
@@ -84,9 +86,10 @@ router.put("/:productId", async (req, res, next) => {
       },
     });
     res.send(result);
-  } catch (error) {
-    next(error);
   }
+  catch (error) {
+    next(error);
+  };
 });
 
 // TODO - routes requiring authentication

@@ -14,6 +14,44 @@ router.get('/', async (req, res, next) => {
   };
 });
 
+// GET cart by cartId in request
+router.get('/:cartId', async (req, res, next) => {
+  try {
+    const result = await prisma.cart.findUnique({
+      where: {
+        cartId: Number(req.params.cartId),
+      },
+    });
+    res.send(result);
+  }
+  catch (error) {
+    next(error);
+  };
+});
+
+// GET cart by ID in request, with all cartItems associated with that ID
+// ... AND each product associated with each cartItem
+router.get('/:cartId/all-items', async (req, res, next) => {
+  try {
+    const result = await prisma.cart.findFirst({
+      where: {
+        cartId: Number(req.params.cartId),
+      },
+      include: {
+        cartItems: {
+          include: {
+            product: true,
+          },
+        },
+      },
+    });
+    res.send(result);
+  }
+  catch (error) {
+    next(error);
+  };
+});
+
 // POST a new cart and set cartStatus to 'current'
 // Should be used after checkout, and cannot be created with cartItems
 // The old cart's cartStatus should be set to 'processing' before this is used

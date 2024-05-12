@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 
 // GET all users
 // !! Route is not secure !!
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
         const result = await prisma.user.findMany();
         res.send(result);
@@ -16,6 +16,21 @@ router.get('/', async (req, res) => {
     }
 })
 
+
+// GET user by userId (secure version)
+router.get('/:userId', require('../auth'), async (req, res, next) => {
+    try {
+        const result = await prisma.user.findUnique({
+            where: {
+                userId: Number(req.params.userId),
+            },
+        });
+        res.send(result);
+    }
+    catch (error) {
+        next(error)
+    }
+});
 
 // GET userId's cart with cartStatus 'current', with associated cartItems
 // ... AND the products associated with each cartItem
@@ -64,7 +79,7 @@ router.get('/:userId', require('../auth'), async (req, res, next) => {
 
 
 // GET all carts by userId in request, with associated cartItems
-router.get('/:userId/history', async (req, res, next) => {
+router.get('/:userId/history', require('../auth'), async (req, res, next) => {
     try {
         const result = await prisma.cart.findMany({
             where: {
@@ -138,6 +153,7 @@ router.post("/login", async (req, res, next) => {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 username: user.username,
+                // password excluded
                 email: user.email,
                 streetAddress: user.streetAddress,
                 city: user.city,
@@ -148,15 +164,17 @@ router.post("/login", async (req, res, next) => {
                 phone: user.phone,
             }
         })
-
     } catch (err) {
         next(err);
     }
 });
 
-
 // PUT user data into an existing user
 router.put('/:userId', require('../auth'), async (req, res, next) => {
+
+    const salt_rounds = 5;
+    const hashedPassword = await bcrypt.hash(req.body.password, salt_rounds);
+
     try {
         const result = await prisma.user.update({
             where: {
@@ -168,7 +186,7 @@ router.put('/:userId', require('../auth'), async (req, res, next) => {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 username: req.body.username,
-                password: req.body.password,
+                password: hashedPassword,
                 email: req.body.email,
                 streetAddress: req.body.streetAddress,
                 city: req.body.city,
