@@ -16,6 +16,7 @@ function App() {
 
   const setCart = (cart) => {
     setCurrentCart(dispatch(authSlice.actions.setCart(cart)).payload)
+    console.log("current cart should of changed", currentCart)
   }
   const setToken = (token) => dispatch(authSlice.actions.setToken(token))
 

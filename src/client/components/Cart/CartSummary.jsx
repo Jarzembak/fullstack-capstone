@@ -8,6 +8,7 @@ const CartSummary = ({ cart, setCart }) => {
     const { data: gotCart, isSuccess } = useGetUserCurrentCartQuery();
     const [createCart, { data: newCart, isUninitialized }] = useCreateCartMutation()
 
+
     const getCartTotal = (cart) => {
         return <>{cart.cartItems.reduce((cartTotal, { quantity, price }) => {
             return cartTotal += (price * quantity);

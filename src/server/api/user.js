@@ -16,22 +16,6 @@ router.get('/', async (req, res, next) => {
     }
 })
 
-
-// GET user by userId (secure version)
-router.get('/:userId', require('../auth'), async (req, res, next) => {
-    try {
-        const result = await prisma.user.findUnique({
-            where: {
-                userId: Number(req.params.userId),
-            },
-        });
-        res.send(result);
-    }
-    catch (error) {
-        next(error)
-    }
-});
-
 // GET userId's cart with cartStatus 'current', with associated cartItems
 // ... AND the products associated with each cartItem
 // There should be ONLY ONE cart with cartStatus 'current' per user
@@ -57,6 +41,23 @@ router.get('/cart', require('../auth'), async (req, res, next) => {
         next(error);
     };
 });
+
+// GET user by userId (secure version)
+router.get('/:userId', require('../auth'), async (req, res, next) => {
+    try {
+        const result = await prisma.user.findUnique({
+            where: {
+                userId: Number(req.params.userId),
+            },
+        });
+        res.send(result);
+    }
+    catch (error) {
+        next(error)
+    }
+});
+
+
 
 // GET user by userId
 // !! Route is not secure !!

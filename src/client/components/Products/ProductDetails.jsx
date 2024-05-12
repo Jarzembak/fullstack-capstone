@@ -16,6 +16,7 @@ const ProductDetails = ({ cart, setCart }) => {
 
     const handleAddToCartButton = (evt) => {
         addProductToCart({ ...product, quantity: 1, cartId: cart.cartId }).unwrap().then((success) => {
+            console.log("adding item to cart")
             let updatedCart = JSON.parse(JSON.stringify(cart));
             updatedCart.cartItems.push(success)
             setCart(updatedCart)
