@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 // GET all users
-// !! Route is not secure !!
+// !! Unsecured route for dev purposes !!
 router.get('/', async (req, res, next) => {
     try {
         const result = await prisma.user.findMany();
@@ -16,10 +16,9 @@ router.get('/', async (req, res, next) => {
     }
 })
 
-// GET userId's cart with cartStatus 'current', with associated cartItems
-// ... AND the products associated with each cartItem
-// There should be ONLY ONE cart with cartStatus 'current' per user
-router.get('/cart', require('../auth'), async (req, res, next) => {
+// GET user by userId
+// !! Unsecured route for dev purposes !!
+router.get('/:userId', async (req, res, next) => {
     try {
         const { id: userId } = req.user;
         const result = await prisma.cart.findFirst({
@@ -42,7 +41,7 @@ router.get('/cart', require('../auth'), async (req, res, next) => {
     };
 });
 
-// GET user by userId (secure version)
+// GET user by userId (with authentication)
 router.get('/:userId', require('../auth'), async (req, res, next) => {
     try {
         const result = await prisma.user.findUnique({

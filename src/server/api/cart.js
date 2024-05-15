@@ -3,8 +3,11 @@ const router = express.Router();
 const { PrismaClient } = require("@prisma/client");
 const { Decimal } = require("@prisma/client/runtime/library");
 const prisma = new PrismaClient();
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 // GET all carts
+// !! Unsecured route for dev purposes !!
 router.get('/', async (req, res, next) => {
   try {
     const result = await prisma.cart.findMany();
@@ -15,6 +18,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // GET cart by cartId in request
+// !! Unsecured route for dev purposes !!
 router.get('/:cartId', async (req, res, next) => {
   try {
     const result = await prisma.cart.findUnique({
