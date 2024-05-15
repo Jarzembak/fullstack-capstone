@@ -1,15 +1,16 @@
 import { Outlet, Link, useParams } from "react-router-dom";
 import './style.css';
 import CartSummary from "../Cart/CartSummary";
+import { useSelector } from "react-redux";
 
-const Navigation = ({ setCart, token, cart }) => {
-
+const Navigation = ({ setCart }) => {
+    const { token } = useSelector(state => state.auth)
     return (
         <>
             <nav>
                 <Link to="/">Home</Link>
                 {token ? <>
-                    <CartSummary cart={cart} setCart={setCart} />
+                    <Link to="/Cart">View Cart: $<CartSummary setCart={setCart} /></Link>
                     <Link to="/Logout">Logout</Link>
                 </> :
                     <>

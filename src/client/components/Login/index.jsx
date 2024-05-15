@@ -18,7 +18,7 @@ const Login = ({ setToken }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     login(inputValues).unwrap().then((success) => {
-      setToken(success.token);
+      setToken(success);
       navigate("/")
     }, (error) => {
       setErrorMessage(error.data);

@@ -1,0 +1,24 @@
+#cart{
+    margin: 0 5%;
+}
+
+.cartItem{
+    display: grid;
+    grid-template-columns: repeat(4,25%);
+    height: 15vh;
+    justify-items:center;
+    align-items:center;
+    border-bottom: 1px solid #ccc;
+    gap:1%;
+    margin: 1%;
+}
+
+.cartItem .itemDetails{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.cartItem img{
+    width: 100%;
+}
