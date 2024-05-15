@@ -56,10 +56,8 @@ router.get('/:userId', require('../auth'), async (req, res, next) => {
     }
 });
 
-
-
 // GET user by userId
-// !! Route is not secure !!
+// !! Unsecured route for dev purposes !!
 router.get('/:userId', require('../auth'), async (req, res, next) => {
     try {
         const { id: userId } = req.user;
@@ -76,7 +74,6 @@ router.get('/:userId', require('../auth'), async (req, res, next) => {
         next(error)
     }
 });
-
 
 // GET all carts by userId in request, with associated cartItems
 router.get('/:userId/history', require('../auth'), async (req, res, next) => {
@@ -124,7 +121,7 @@ router.post('/', async (req, res, next) => {
     }
     catch (error) {
         console.log(error)
-        // next(error);
+        next(error);
     };
 });
 
@@ -145,7 +142,7 @@ router.post("/login", async (req, res, next) => {
             return res.status(401).send("Invalid Login");
         }
 
-        const token = jwt.sign({ id: user.userId }, process.env.JWT);
+        const token = jwt.sign({ id: user.userId, admin: user.isAdmin }, process.env.JWT);
 
         res.send({
             token,
@@ -153,15 +150,6 @@ router.post("/login", async (req, res, next) => {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 username: user.username,
-                // password excluded
-                email: user.email,
-                streetAddress: user.streetAddress,
-                city: user.city,
-                zipcode: user.zipcode,
-                billingAddress: user.billingAddress,
-                billingCity: user.billingCity,
-                billingZipcode: user.billingZipcode,
-                phone: user.phone,
             }
         })
     } catch (err) {

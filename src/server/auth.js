@@ -16,4 +16,23 @@ const protection = async (req, res, next) => {
     }
 };
 
-module.exports = protection;
+/*
+const adminProtection = async (req, res, next) => {
+    try {
+        const admin = req.headers.authorization.split(" ")[1]
+        if (!admin) {
+            return res.status(401).send("No token provided.");
+        }
+        req.user = jwt.verify(admin, process.env.JWT);
+        console.log(req.user)
+        next();
+    } catch (error) {
+        return res.status(403).send(`Failed to authenticate token.`)
+    }
+};
+*/
+
+module.exports = {
+    protection,
+    // adminProtection
+}
