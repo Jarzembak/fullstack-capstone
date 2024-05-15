@@ -3,28 +3,31 @@ export const authSlice = createSlice({
     name: "auth",
     initialState: {
         token: window.sessionStorage.getItem("token")
-            || localStorage.getItem("token")
+            || window.localStorage.getItem("token")
             || null,
         cart: {
-            cartId: 0,
             cartItems: []
-        }
+        },
+        user: null
     },
     reducers: {
-        setToken: (state, action) => {
-            state.token = action.payload;
-            window.sessionStorage.setItem("token", action.payload);
-            window.localStorage.setItem("token", action.payload);
+        setToken: (state, { payload }) => {
+            state.token = payload.token;
+            state.user = payload.user;
+            state.cart = {
+                cartItems: []
+            }
+            window.sessionStorage.setItem("token", payload.token);
+            window.localStorage.setItem("token", payload.token);
 
         },
         setCart: (state, action) => {
             state.cart = action.payload;
         },
         clearToken: (state) => {
-            state.token = undefined;
             window.sessionStorage.removeItem("token");
             window.localStorage.removeItem("token");
-            state.cart = undefined;
+            window.location.href = "/"
         }
     },
 });

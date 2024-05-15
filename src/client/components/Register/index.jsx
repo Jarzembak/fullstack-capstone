@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import './style.css';
-import { useCreateUserMutation } from '../../services/user';
+import { useAuthenticateUserMutation, useCreateUserMutation } from '../../services/user';
+import { useNavigate } from 'react-router-dom';
 
-const Register = (setToken) => {
+const Register = ({ setToken }) => {
     const [inputValues, setInputValues] = useState({});
+    const navigate = useNavigate();
     const handleFieldChange = ({ target }) => {
         setInputValues({ ...inputValues, [target.name]: target.value })
     }
-    const [createUser, { data, isLoading }] = useCreateUserMutation();
+    const [createUser, { isLoading }] = useCreateUserMutation();
+    const [login] = useAuthenticateUserMutation();
+
     if (isLoading) {
 
     } else {
@@ -15,8 +19,10 @@ const Register = (setToken) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        createUser(inputValues).unwrap().then((success) => {
-
+        createUser(inputValues).unwrap().then(async (success) => {
+            const { data: auth } = await login(success)
+            setToken(auth)
+            navigate("/")
         });
     };
 

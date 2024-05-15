@@ -1,5 +1,5 @@
 import './style.css';
-import { useSearchParams, useNavigate,createSearchParams } from "react-router-dom"
+import { useSearchParams, useNavigate, createSearchParams } from "react-router-dom"
 
 const SearchProducts = () => {
 
@@ -21,7 +21,7 @@ const SearchProducts = () => {
     return (
         <>
             <form id="SearchProducts" onSubmit={handleSubmit}>
-                <label >Search<input name="q" /><input type="submit" value="Go" /></label>
+                <label >Search<input name="q" autoComplete='off' /><input type="submit" value="Go" /></label>
             </form>
         </>
     );

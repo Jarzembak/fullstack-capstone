@@ -6,4 +6,5 @@
 
 #SearchProducts input:first-child{
     width: inherit;
+    margin-left: 1ch;
 }
