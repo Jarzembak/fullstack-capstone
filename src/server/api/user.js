@@ -6,9 +6,9 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const auth = require("../auth");
 
-// GET all users
-// !! Unsecured route for dev purposes !!
-router.get('/', async (req, res, next) => {
+// GET all users (Admin only)
+// May include
+router.get('/', auth.adminProtection, async (req, res, next) => {
     try {
         const result = await prisma.user.findMany();
         res.send(result);
@@ -17,14 +17,13 @@ router.get('/', async (req, res, next) => {
     }
 })
 
-// GET userId's cart with cartStatus 'current'
+// GET userId's cart with cartStatus 'current', including all related cartItems and products
 // Only one cart per user should have cartStatus 'current'
-router.get('/:userId', async (req, res, next) => {
+router.get(':userId/cart', auth.loginProtection, async (req, res, next) => {
     try {
-        const { id: userId } = req.user;
         const result = await prisma.cart.findFirst({
             where: {
-                userId,
+                userId: Number(req.params.userId),
                 cartStatus: 'current',
             },
             include: {
@@ -43,7 +42,7 @@ router.get('/:userId', async (req, res, next) => {
 });
 
 // GET user by userId (with authentication)
-router.get('/:userId', auth.protection, async (req, res, next) => {
+router.get('/:userId', auth.loginProtection, async (req, res, next) => {
     try {
         const result = await prisma.user.findUnique({
             where: {
@@ -57,15 +56,12 @@ router.get('/:userId', auth.protection, async (req, res, next) => {
     }
 });
 
-// GET user by userId
-// !! Unsecured route for dev purposes !!
-router.get('/:userId', auth.protection, async (req, res, next) => {
+// GET user by userId (Admin only)
+router.get('/:userId', auth.adminProtection, async (req, res, next) => {
     try {
-        const { id: userId } = req.user;
-
         const result = await prisma.user.findUnique({
             where: {
-                userId
+                userId: Number(req.params.userId)
             },
         });
         res.send(result);
@@ -77,7 +73,8 @@ router.get('/:userId', auth.protection, async (req, res, next) => {
 });
 
 // GET all carts by userId in request, with associated cartItems
-router.get('/:userId/history', auth.protection, async (req, res, next) => {
+// Does not include product details for cartItems
+router.get('/:userId/history', auth.loginProtection, async (req, res, next) => {
     try {
         const result = await prisma.cart.findMany({
             where: {
@@ -147,7 +144,7 @@ router.post("/login", async (req, res, next) => {
 
         res.send({
             token,
-            user: { // What info is needed here?
+            user: {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 username: user.username,
@@ -159,7 +156,7 @@ router.post("/login", async (req, res, next) => {
 });
 
 // PUT user data into an existing user
-router.put('/:userId', auth.protection, async (req, res, next) => {
+router.put('/:userId', auth.loginProtection, async (req, res, next) => {
 
     const salt_rounds = 5;
     const hashedPassword = await bcrypt.hash(req.body.password, salt_rounds);

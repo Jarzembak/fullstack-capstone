@@ -4,10 +4,18 @@ const { faker } = require("@faker-js/faker");
 
 const prisma = new PrismaClient();
 
-// Seed data for 20 users
+// Seed data for 20 users and 1 administrator
 async function userSeed() {
-  for(i=0; i < 20; i++){
-    try {
+  try {
+    await prisma.user.create({
+      data: {
+        isAdmin: true,
+        username: "admin",
+        password: "admin",
+        email: "admin"
+      }
+    })
+    for(i=0; i < 20; i++){
       await prisma.user.create({
         data: {
           firstName: faker.person.firstName(),
@@ -25,16 +33,15 @@ async function userSeed() {
         }
       });
     }
-    catch(error) {
-      console.log(error);
-      throw error;
-    };
-    console.log(await prisma.user.findFirst({
-      orderBy: {
-        userId: 'desc',
-      }
-    }));
+  } catch(error) {
+    console.log(error);
+    throw error;
   };
+  console.log(await prisma.user.findFirst({
+    orderBy: {
+      userId: 'desc',
+    }
+  }));
 };
 
 // Seed data for 20 products
@@ -62,7 +69,7 @@ async function productSeed() {
   };
 };
 
-// Seed 2 carts per user, 1 'current' and 1 'order complete'
+// Seed 2 carts per user, 1 'current' and 1 'complete'
 async function cartSeed() {
   const users = await prisma.user.findMany();
   for (i=0; i < users.length; i++) {
