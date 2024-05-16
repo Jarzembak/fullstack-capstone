@@ -4,6 +4,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const auth = require("../auth");
 
 // GET all users
 // !! Unsecured route for dev purposes !!
@@ -16,8 +17,8 @@ router.get('/', async (req, res, next) => {
     }
 })
 
-// GET user by userId
-// !! Unsecured route for dev purposes !!
+// GET userId's cart with cartStatus 'current'
+// Only one cart per user should have cartStatus 'current'
 router.get('/:userId', async (req, res, next) => {
     try {
         const { id: userId } = req.user;
@@ -42,7 +43,7 @@ router.get('/:userId', async (req, res, next) => {
 });
 
 // GET user by userId (with authentication)
-router.get('/:userId', require('../auth'), async (req, res, next) => {
+router.get('/:userId', auth.protection, async (req, res, next) => {
     try {
         const result = await prisma.user.findUnique({
             where: {
@@ -58,7 +59,7 @@ router.get('/:userId', require('../auth'), async (req, res, next) => {
 
 // GET user by userId
 // !! Unsecured route for dev purposes !!
-router.get('/:userId', require('../auth'), async (req, res, next) => {
+router.get('/:userId', auth.protection, async (req, res, next) => {
     try {
         const { id: userId } = req.user;
 
@@ -76,7 +77,7 @@ router.get('/:userId', require('../auth'), async (req, res, next) => {
 });
 
 // GET all carts by userId in request, with associated cartItems
-router.get('/:userId/history', require('../auth'), async (req, res, next) => {
+router.get('/:userId/history', auth.protection, async (req, res, next) => {
     try {
         const result = await prisma.cart.findMany({
             where: {
@@ -158,7 +159,7 @@ router.post("/login", async (req, res, next) => {
 });
 
 // PUT user data into an existing user
-router.put('/:userId', require('../auth'), async (req, res, next) => {
+router.put('/:userId', auth.protection, async (req, res, next) => {
 
     const salt_rounds = 5;
     const hashedPassword = await bcrypt.hash(req.body.password, salt_rounds);

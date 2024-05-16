@@ -8,7 +8,7 @@ const protection = async (req, res, next) => {
         if (!token) {
             return res.status(401).send("No token provided.");
         }
-        req.user = jwt.verify(token, process.env.JWT);
+        jwt.verify(token, process.env.JWT);
         console.log(req.user)
         next();
     } catch (error) {
@@ -19,8 +19,8 @@ const protection = async (req, res, next) => {
 /*
 const adminProtection = async (req, res, next) => {
     try {
-        const admin = req.headers.authorization.split(" ")[1]
-        if (!admin) {
+        const token = req.headers.authorization.split(" ")[1]
+        if (!token) {
             return res.status(401).send("No token provided.");
         }
         req.user = jwt.verify(admin, process.env.JWT);
