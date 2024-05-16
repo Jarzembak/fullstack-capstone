@@ -7,8 +7,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const auth = require("../auth");
 
-// GET all carts
-router.get('/', auth.protection, async (req, res, next) => {
+// GET all carts (Admin only)
+router.get('/', auth.adminProtection, async (req, res, next) => {
   try {
     const result = await prisma.cart.findMany();
     res.send(result);
@@ -17,7 +17,7 @@ router.get('/', auth.protection, async (req, res, next) => {
   };
 });
 
-// GET cart by cartId in request
+// GET cart by cartId in request (Admin only)
 router.get('/:cartId', auth.protection, async (req, res, next) => {
   try {
     const result = await prisma.cart.findUnique({
@@ -75,27 +75,13 @@ router.post('/', auth.protection, async (req, res, next) => {
   };
 });
 
-// GET cart by cartId in request
-router.get('/:cartId', auth.protection, async (req, res, next) => {
-  try {
-    const result = await prisma.cart.findUnique({
-      where: {
-        cartId: Number(req.params.cartId),
-      },
-    });
-    res.send(result);
-  }
-  catch (error) {
-    next(error);
-  };
-});
-
 // GET cart by ID in request, with all cartItems associated with that ID
 router.get('/:cartId/all-items', auth.protection, async (req, res, next) => {
   try {
     const result = await prisma.cart.findFirst({
       where: {
         cartId: Number(req.params.cartId),
+        userId: Number(req.user.userId)
       },
       include: {
         cartItems: true,
@@ -115,6 +101,7 @@ router.get('/:cartId/all-items-and-products', auth.protection, async (req, res, 
     const result = await prisma.cart.findFirst({
       where: {
         cartId: Number(req.params.cartId),
+        userId: Number(req.user.userId)
       },
       include: {
         cartItems: {
@@ -158,6 +145,9 @@ router.put('/item', auth.protection, async (req, res, next) => {
         productId_cartId: {
           cartId: Number(req.body.cartId),
           productId: Number(req.body.productId)
+        },
+        cart: {
+            userId: req.user.userId,
         }
       },
       data: {
@@ -173,6 +163,8 @@ router.put('/item', auth.protection, async (req, res, next) => {
     next(error);
   };
 });
+
+
 
 // PUT cart data into an existing cart
 // For now, used only for changing cartStatus
