@@ -47,6 +47,22 @@ router.get('/', auth.protection, async (req, res, next) => {
     }
 });
 
+// GET userId's cart with cartStatus 'current'
+router.get('/cart', auth.protection, async (req, res, next) => {
+    try {
+        const result = await prisma.cart.findFirst({
+            where: {
+                userId: Number(req.user.userId),
+                cartStatus: 'current',
+            },
+        });
+        res.send(result);
+    }
+    catch (error) {
+        next(error);
+    };
+});
+
 // GET userId's cart with cartStatus 'current', including all related cartItems and products
 // Only one cart per user should have cartStatus 'current'
 router.get('/cart', auth.protection, async (req, res, next) => {
