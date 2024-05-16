@@ -11,27 +11,6 @@ const protection = async (req, res, next) => {
         }
 
         req.user = jwt.verify(token, process.env.JWT);
-        // No ID verification
-        console.log("verify token:", req.user.userId)
-        next()
-    } catch (error) {
-        return res.status(403).send(`Failed to authenticate token.`)
-    }
-};
-
-const loginProtection = async (req, res, next) => {
-    try {
-        const token = req.headers.authorization.split(" ")[1]
-
-        if (!token) {
-            return res.status(401).send("No token provided.");
-        }
-
-        req.user = jwt.verify(token, process.env.JWT);
-
-        if (req.params.id != req.user.userId) {
-            return res.status(401).send("Token does not match user.")
-        }
 
         console.log("verify token:", req.user.userId)
         next()
@@ -63,6 +42,5 @@ const adminProtection = async (req, res, next) => {
 
 module.exports = {
     protection,
-    loginProtection,
     adminProtection
 }

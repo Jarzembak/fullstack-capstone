@@ -16,7 +16,7 @@ export const userApi = createApi({
     }),
     endpoints: (builder) => ({
         getUsers: builder.query({
-            query: () => ({ url: "users/" }),
+            query: () => ({ url: "users/all" }),
         }),
         createUser: builder.mutation({
             query: (body) => ({
@@ -27,12 +27,12 @@ export const userApi = createApi({
             query: () => ({ url: `users/cart` }),
         }),
         updateUser: builder.mutation({
-            query: (body, userId) => ({
-                url: `users/${userId}`, method: "PUT", body
+            query: (body) => ({
+                url: `users/`, method: "PUT", body
             }),
         }),
         getUserHistory: builder.query({
-            query: (userId) => ({ url: `users/${userId}/history` }),
+            query: () => ({ url: `users/history` }),
         }),
         authenticateUser: builder.mutation({
             query: (body) => ({
