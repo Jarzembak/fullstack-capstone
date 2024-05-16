@@ -60,12 +60,11 @@ router.get('/:cartId/all-items', auth.protection, async (req, res, next) => {
 // The old cart's cartStatus should be set to 'processing' before this is used
 router.post('/', auth.protection, async (req, res, next) => {
   try {
-    const { id: userId } = req.user;
 
     const result = await prisma.cart.create({
       data: {
         cartStatus: 'current',
-        userId,
+        userId: req.user.userId,
       },
     });
     res.send(result);
@@ -210,6 +209,9 @@ router.delete('/item/:cartId', auth.protection, async (req, res, next) => {
     const result = await prisma.cartItem.deleteMany({
       where: {
         cartId: Number(req.params.cartId),
+        cart: {
+          cartStatus: 'current',
+        },
       },
     });
     res.sendStatus(204);

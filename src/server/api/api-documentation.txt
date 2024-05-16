@@ -5,28 +5,25 @@ API URL Format
 ------------------------------
 For the locally hosted database, the base URL is "localhost:3000/api" followed by the resource you are trying to access.
 
-Each table in the database schema is considered a resource. The resoruces include:
-
+The resoruces include :
 /users
 /products
 /carts
-/cart-items
-
-Notes:
-- Some routes may be restricted after auth is added.
+(cartItems are accessed through the routes found in /carts)
 
 ------------------------------
 Authentication
 ------------------------------
-With the implementation of auth functionality in progress, certain routes require the user to be logged in.
-Here is an example of a route requiring authentication (GET /user/:userId):
+Some routes require a login or a user with admininstrator access.
 
-// GET user by userId (secure version)
-router.get('/:userId', require('../auth'), async (req, res, next) => {
+Here is an example of a route requiring authentication (GET /api/users):
+
+// GET user currently logged in
+router.get('/', auth.protection, async (req, res, next) => {
     try {
         const result = await prisma.user.findUnique({
             where: {
-                userId: Number(req.params.userId),
+                userId: Number(req.user.userId)
             },
         });
         res.send(result);
@@ -36,19 +33,22 @@ router.get('/:userId', require('../auth'), async (req, res, next) => {
     }
 });
 
-The parameter require('../auth') in the method call takes a json web token, which is returned to the user on login.
-This token should be stored in the client's state data and passed into routes like the above example.
+Auth functions are imported via "const auth = require('../auth')".
+The method call "auth.protection" takes a json web token, which is verified before storing the payload in "req.user" for the next middleware function.
+The payload includes the Number userId ("req.user.userId") and Boolean isAdmin ("req.user.isAdmin").
 
 ------------------------------
-Endpoints - General
+Endpoints - Administrator
 ------------------------------
 GET /<resource>
 - Returns the complete table for the requested resource.
 - This may be used for any resource.
+- Products do not require administrator authentication for this route.
 
 GET /<resource>/<resourceId>
 - Returns the resource with the primary key (ID) in the request.
-- This may be used for any resoruce EXCEPT cartItem, which has no primary key.
+- This is not available for the cartItem table, which is instead accessed through the cart table.
+- Products do not require administrator authentication for this route.
 
 POST /<resource>
 - Creates a new row for a given resource.
@@ -80,7 +80,6 @@ GET /users/<userId>/cart/history
 ------------------------------
 Endpoints - Cart
 ------------------------------
-
 GET /carts/<cartId>/items
 - Returns all cartItems associated with the cart ID number.
 
@@ -126,9 +125,28 @@ DELETE /carts/item/<cartId>
 ------------------------------
 Endpoints - Product
 ------------------------------
-No unique API routes yet.
+GET /products
+- Fetches all products in the product table.
+- No authentication required; users that have not logged in (Guests) can use this route.
+
+GET /products/<productID>
+- Fetches a product row with the matching ID.
+- No authentication required; users that have not logged in (Guests) can use this route.
+
+GET /products/search
+- This executes a search for products with customizable criteria.
+- The body of the request must be formatted specifically:
+    {
+        pagination: Number // The number of results per page
+        goToPage: Number // Page will be calculated as (pagination * (goToPage - 1))
+        nameContains: String // String to search the product name for
+        orderBy: String // The Product column you want to search by (exact key names ONLY)
+        orderDir: String // Must be 'asc' or 'desc' ONLY
+    }
+- No authentication required; users that have not logged in (Guests) can use this route.
 
 ------------------------------
 Endpoints - CartItem
 ------------------------------
-Depreciated; mostly merged into Cart routes.
+- Depreciated
+- cartItems are now accessed through /carts routes.

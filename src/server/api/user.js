@@ -126,7 +126,7 @@ router.post('/', async (req, res, next) => {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 username: req.body.username,
-                password: req.body.password || hashedPassword,
+                password: hashedPassword,
                 email: req.body.email,
                 streetAddress: req.body.streetAddress,
                 city: req.body.city,
