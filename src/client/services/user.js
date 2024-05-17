@@ -26,6 +26,9 @@ export const userApi = createApi({
         getUserCurrentCart: builder.query({
             query: () => ({ url: `users/cart` }),
         }),
+        getUserCurrentCartDetails: builder.query({
+            query: () => ({ url: `users/cart/details` }),
+        }),
         updateUser: builder.mutation({
             query: (body) => ({
                 url: `users/`, method: "PUT", body
@@ -42,4 +45,4 @@ export const userApi = createApi({
     }),
 });
 
-export const { useGetUsersQuery, useCreateUserMutation, useGetUserHistoryQuery, useGetUserCurrentCartQuery, useAuthenticateUserMutation } = userApi;
+export const { useGetUsersQuery, useCreateUserMutation, useGetUserHistoryQuery, useGetUserCurrentCartQuery, useGetUserCurrentCartDetailsQuery, useAuthenticateUserMutation } = userApi;

@@ -20,8 +20,9 @@ const SearchProducts = () => {
     }
     return (
         <>
-            <form id="SearchProducts" onSubmit={handleSubmit}>
-                <label >Search<input name="q" autoComplete='off' /><input type="submit" value="Go" /></label>
+            <form id="SearchProducts" onSubmit={handleSubmit} >
+                <input id="search" name="q" autoComplete='off' placeholder='What are you looking for?' />
+                <input id="searchSubmitButton" type="submit" value="Go" />
             </form>
         </>
     );
