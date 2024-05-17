@@ -20,7 +20,7 @@ const Register = ({ setToken }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         createUser(inputValues).unwrap().then(async (success) => {
-            const { data: auth } = await login(success)
+            const { data: auth } = await login({ username: inputValues.username, password: inputValues.password })
             setToken(auth)
             navigate("/")
         });
