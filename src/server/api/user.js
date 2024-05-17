@@ -48,6 +48,7 @@ router.get('/', auth.protection, async (req, res, next) => {
 });
 
 // GET userId's cart with cartStatus 'current'
+// Only one cart per user should have cartStatus 'current'
 router.get('/cart', auth.protection, async (req, res, next) => {
     try {
         const result = await prisma.cart.findFirst({
@@ -65,7 +66,7 @@ router.get('/cart', auth.protection, async (req, res, next) => {
 
 // GET userId's cart with cartStatus 'current', including all related cartItems and products
 // Only one cart per user should have cartStatus 'current'
-router.get('/cart', auth.protection, async (req, res, next) => {
+router.get('/cart/details', auth.protection, async (req, res, next) => {
     try {
         const result = await prisma.cart.findFirst({
             where: {
@@ -180,7 +181,7 @@ router.post("/login", async (req, res, next) => {
             return res.status(401).send("Invalid Login");
         }
 
-        const token = jwt.sign({ id: user.userId, admin: user.isAdmin }, process.env.JWT);
+        const token = jwt.sign({ userId: user.userId, isAdmin: user.isAdmin }, process.env.JWT);
 
         res.send({
             token,

@@ -42,6 +42,7 @@ model product {
   isVisible       Boolean     @default(false)
   imageUrl        String      @db.VarChar(255)
   description     String      @db.VarChar(255)
+  category        String      @db.VarChar(255)
   price           Decimal     @db.Money
   cartItems       cartItem[]
 }

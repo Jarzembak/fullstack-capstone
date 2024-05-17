@@ -17,8 +17,8 @@ router.get('/', auth.adminProtection, async (req, res, next) => {
   };
 });
 
-// GET cart by cartId in request (Admin only)
-router.get('/:cartId', auth.protection, async (req, res, next) => {
+// GET any cart by cartId in request (Admin only)
+router.get('/:cartId', auth.adminProtection, async (req, res, next) => {
   try {
     const result = await prisma.cart.findUnique({
       where: {

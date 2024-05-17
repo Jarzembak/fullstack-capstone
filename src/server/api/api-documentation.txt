@@ -1,4 +1,5 @@
-API DOCUMENTATION
+API DOCUMENTATION 
+(5/16 - may be missing routes)
 
 ------------------------------
 API URL Format
@@ -38,14 +39,14 @@ The method call "auth.protection" takes a json web token, which is verified befo
 The payload includes the Number userId ("req.user.userId") and Boolean isAdmin ("req.user.isAdmin").
 
 ------------------------------
-Endpoints - Administrator
+Endpoints - General
 ------------------------------
-GET /<resource>
+[Admin] GET /<resource>
 - Returns the complete table for the requested resource.
 - This may be used for any resource.
 - Products do not require administrator authentication for this route.
 
-GET /<resource>/<resourceId>
+[Admin] GET /<resource>/<resourceId>
 - Returns the resource with the primary key (ID) in the request.
 - This is not available for the cartItem table, which is instead accessed through the cart table.
 - Products do not require administrator authentication for this route.
@@ -62,25 +63,30 @@ PUT /<resource>/<resourceId>
 - Updates the row for a given resource based on the primary key.
 - Accepts an object with all required fields (excluding primary key) in the request.
 
-
 ------------------------------
 Endpoints - User
 ------------------------------
-GET /users/<userId>/cart
+GET /users/cart
 - Returns a cart for the given user ID number with cartStatus 'current'.
 - For each user, there should only be one cart with cartStatus set to 'current' at a time.
-- Also returns cartItems associated with the cart.
-    - Each cartItem now also includes the product it represents, based on the productId foreign key.
 
-GET /users/<userId>/cart/history
+GET /users/cart/details
+- Returns a cart for the given user ID number with cartStatus 'current'
+- Also returns the cartItems and products associated with those cartItems
+
+GET /users/history
 - Returns all carts for the given user ID number.
 - Effectively, this looks up the user's order history.
 - Also returns the cartItems associated with each cart.
 
+GET /users/history/<cartId>
+- Returns a single cart belonging to the logged in user, based on cartId.
+
 ------------------------------
 Endpoints - Cart
 ------------------------------
-GET /carts/<cartId>/items
+
+[Admin] GET /carts/<cartId>/items
 - Returns all cartItems associated with the cart ID number.
 
 GET /carts/<userId>/cart
@@ -120,7 +126,7 @@ DELETE /carts/item/<cartId>
 - Deletes ALL cartItems with the matching cartId param.
 - Used to clear a user's cart completely.
 - Responds with status 204 when successful.
-* TODO: needs validation to prevent carts for completed orders from being changed.
+- Only works with cartStatus 'current' carts
 
 ------------------------------
 Endpoints - Product
@@ -135,7 +141,9 @@ GET /products/<productID>
 
 GET /products/search
 - This executes a search for products with customizable criteria.
-- The body of the request must be formatted specifically:
+- The URL must be followed by a query:
+  <...>/products/search?pagination=<Number>&goToPage=<Number>&nameContains=<String>&orderBy=<String>&orderDir=<String>
+
     {
         pagination: Number // The number of results per page
         goToPage: Number // Page will be calculated as (pagination * (goToPage - 1))

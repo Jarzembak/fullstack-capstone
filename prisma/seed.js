@@ -53,6 +53,7 @@ async function productSeed() {
           name: faker.commerce.productName(),
           imageUrl: faker.image.urlLoremFlickr(),
           description: faker.commerce.productDescription(),
+          category: faker.commerce.productAdjective(),
           price: faker.commerce.price()
         }
       });
