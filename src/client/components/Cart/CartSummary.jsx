@@ -1,12 +1,12 @@
 import './style.css';
-import { useGetUserCurrentCartQuery } from '../../services/user';
+import { useGetUserCurrentCartDetailsQuery } from '../../services/user';
 import { useCreateCartMutation } from '../../services/cart';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 const CartSummary = ({ setCart }) => {
     const { cart, token } = useSelector((state => state.auth));
-    const { data: userCart } = useGetUserCurrentCartQuery();
+    const { data: userCart } = useGetUserCurrentCartDetailsQuery();
     const [createCart, { data: newCart, isUninitialized }] = useCreateCartMutation()
 
     const getCartTotal = ({ cartItems } = { cartItems: [] }) => {

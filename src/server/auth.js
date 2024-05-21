@@ -11,8 +11,6 @@ const protection = async (req, res, next) => {
         }
 
         req.user = jwt.verify(token, process.env.JWT);
-
-        console.log("verify token:", req.user.userId)
         next()
     } catch (error) {
         return res.status(403).send(`Failed to authenticate token.`)
@@ -23,7 +21,7 @@ const protection = async (req, res, next) => {
 const adminProtection = async (req, res, next) => {
     try {
         const token = req.headers.authorization.split(" ")[1]
-        
+
         if (!token) {
             return res.status(401).send("No token provided.");
         }

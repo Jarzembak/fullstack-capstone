@@ -16,9 +16,30 @@ router.get('/all', auth.adminProtection, async (req, res, next) => {
     }
 })
 
+
+// GET userId's cart with cartStatus 'current'
+router.get('/cart', auth.protection, async (req, res, next) => {
+    try {
+
+        console.log(req.user)
+        const result = await prisma.cart.findFirst({
+            where: {
+                userId: Number(req.user.userId),
+                cartStatus: 'current',
+            },
+        });
+        res.send(result);
+    }
+    catch (error) {
+        next(error);
+    };
+});
+
 // GET user by userId (Admin only)
 router.get('/:userId', auth.adminProtection, async (req, res, next) => {
     try {
+        console.log("I think this is the issue, also here")
+
         const result = await prisma.user.findUnique({
             where: {
                 userId: Number(req.params.userId)
@@ -111,25 +132,25 @@ router.get('/history', auth.protection, async (req, res, next) => {
 // Regular users will use this to find specific carts, not the api/carts/ routes
 router.get('/history/:cartId', auth.protection, async (req, res, next) => {
     try {
-      const result = await prisma.cart.findUnique({
-        where: {
-          cartId: Number(req.params.cartId),
-          userId: Number(req.user.userId)
-        },
-        include: {
-            cartItems: {
-                include: {
-                    product: true,
+        const result = await prisma.cart.findUnique({
+            where: {
+                cartId: Number(req.params.cartId),
+                userId: Number(req.user.userId)
+            },
+            include: {
+                cartItems: {
+                    include: {
+                        product: true,
+                    },
                 },
             },
-        },
-      });
-      res.send(result);
+        });
+        res.send(result);
     }
     catch (error) {
-      next(error);
+        next(error);
     };
-  });
+});
 
 // POST a new user (Registration)
 router.post('/', async (req, res, next) => {
