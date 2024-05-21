@@ -13,7 +13,8 @@ const Products = () => {
 
     const handleNextPage = () => {
         console.log(searchParams)
-        setSearchParams(searchParams + "!")
+
+        setSearchParams(searchParams)
     }
 
     if (isLoading) {
