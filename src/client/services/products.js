@@ -23,7 +23,12 @@ export const productsApi = createApi({
         url: `products/${productId}/`,
       }),
     }),
+    searchProducts: builder.query({
+      query: (params) => ({
+        url: `products/search?${params}`,
+
+      }),
+    }),
   }),
 });
-
-export const { useGetProductsQuery, useGetProductQuery } = productsApi;
+export const { useGetProductsQuery, useGetProductQuery, useSearchProductsQuery } = productsApi;

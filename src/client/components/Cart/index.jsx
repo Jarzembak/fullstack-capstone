@@ -1,12 +1,12 @@
 import './style.css';
-import { useGetUserCurrentCartQuery } from '../../services/user';
+import { useGetUserCurrentCartDetailsQuery } from '../../services/user';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 
 export function Cart() {
     const { cart } = useSelector(state => state.auth)
-    const { data: currentCart, refetch } = useGetUserCurrentCartQuery();
+    const { data: currentCart, refetch } = useGetUserCurrentCartDetailsQuery();
 
     useEffect(() => {
         refetch()

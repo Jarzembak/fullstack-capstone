@@ -10,7 +10,7 @@ const Navigation = ({ setCart }) => {
             <nav>
                 <Link to="/">Home</Link>
                 {token ? <>
-                    <Link to="/Cart">View Cart: $<CartSummary setCart={setCart} /></Link>
+                    {/* <Link to="/Cart">View Cart: $<CartSummary setCart={setCart} /></Link> */}
                     <Link to="/Logout">Logout</Link>
                 </> :
                     <>

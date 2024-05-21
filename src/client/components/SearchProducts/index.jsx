@@ -8,21 +8,22 @@ const SearchProducts = () => {
     const handleSubmit = (evt) => {
         evt.preventDefault();
         const params = createSearchParams([...new FormData(evt.target)]);
-        if (!params.get("q").trim() == "") {
-            navigate({
-                pathname: "/Products",
-                search: params.toString()
-            });
-        } else {
-            navigate("/")
-        }
-
+        navigate({
+            pathname: "/Products"
+        }, { state: { searchParams: params.toString() } });
     }
+
+
     return (
         <>
             <form id="SearchProducts" onSubmit={handleSubmit} >
-                <input id="search" name="q" autoComplete='off' placeholder='What are you looking for?' />
+                <input id="nameContains" type="text" name="nameContains" autoComplete='off' placeholder='What are you looking for?' />
+                <input id="pagination" type="hidden" name="pagination" autoComplete='off' defaultValue="8" />
+                <input id="goToPage" type="hidden" name="goToPage" autoComplete='off' defaultValue="1" />
+                <input id="orderBy" type="hidden" name="orderBy" autoComplete='off' defaultValue="price" />
+                <input id="orderDir" type="hidden" name="orderDir" autoComplete='off' defaultValue="asc" />
                 <input id="searchSubmitButton" type="submit" value="Go" />
+
             </form>
         </>
     );
