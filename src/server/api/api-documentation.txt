@@ -142,15 +142,14 @@ GET /products/<productID>
 GET /products/search
 - This executes a search for products with customizable criteria.
 - The URL must be followed by a query:
-  <...>/products/search?pagination=<Number>&goToPage=<Number>&nameContains=<String>&orderBy=<String>&orderDir=<String>
+  .../products/search?pagination=<Number>&goToPage=<Number>&nameContains=<String>&orderBy=<String>&orderDir=<String>
+    
+    pagination: Number // The number of results per page
+    goToPage: Number // Page will be calculated as (pagination * (goToPage - 1))
+    nameContains: String // String to search the product name for
+    orderBy: String // The Product column you want to search by (exact key names ONLY)
+    orderDir: String // Must be 'asc' or 'desc' ONLY
 
-    {
-        pagination: Number // The number of results per page
-        goToPage: Number // Page will be calculated as (pagination * (goToPage - 1))
-        nameContains: String // String to search the product name for
-        orderBy: String // The Product column you want to search by (exact key names ONLY)
-        orderDir: String // Must be 'asc' or 'desc' ONLY
-    }
 - No authentication required; users that have not logged in (Guests) can use this route.
 
 ------------------------------

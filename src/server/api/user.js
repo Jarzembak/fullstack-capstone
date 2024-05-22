@@ -18,7 +18,7 @@ router.get('/all', auth.adminProtection, async (req, res, next) => {
 
 
 // GET userId's cart with cartStatus 'current'
-router.get('/cart', auth.protection, async (req, res, next) => {
+router.get('/current', auth.protection, async (req, res, next) => {
     try {
 
         console.log(req.user)
@@ -250,6 +250,32 @@ router.put('/', auth.protection, async (req, res, next) => {
     catch (error) {
         next(error);
     };
+});
+
+// GET all users (Admin only)
+router.get('/all', auth.adminProtection, async (req, res, next) => {
+    try {
+        const result = await prisma.user.findMany();
+        res.send(result);
+    } catch (error) {
+        next(error)
+    }
+})
+
+// GET user by userId (Admin only)
+router.get('/:userId', auth.adminProtection, async (req, res, next) => {
+    try {
+        const result = await prisma.user.findUnique({
+            where: {
+                userId: Number(req.params.userId)
+            },
+        });
+        res.send(result);
+        console.log("GetUserById", result)
+    }
+    catch (error) {
+        next(error)
+    }
 });
 
 module.exports = router;

@@ -18,7 +18,7 @@ export const cartApi = createApi({
             query: () => ({ url: "carts/" }),
         }),
         getCart: builder.query({
-            query: (cartId) => ({ url: `carts/${cartId}/cart` }),
+            query: (cartId) => ({ url: `carts/${cartId}` }),
         }),
         getCartItems: builder.query({
             query: (cartId) => ({ url: `carts/${cartId}/all-items` }),

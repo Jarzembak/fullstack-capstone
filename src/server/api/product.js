@@ -28,11 +28,11 @@ orderDir: String // Must be 'asc' or 'desc'
 */
 router.get('/search', async (req, res, next) => {
     try {
-        const toPage = Number(req.query.pagination * (req.query.goToPage - 1))
+        const toPage = (req.query.pagination * (req.query.goToPage - 1))
         if (toPage < 0) { toPage = 0 }
 
         const result = await prisma.product.findMany({
-          skip: toPage,
+          skip: Number(toPage),
           take: Number(req.query.pagination),
           where: {
             name: {

@@ -7,31 +7,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const auth = require("../auth");
 
-// GET all carts (Admin only)
-router.get('/', auth.adminProtection, async (req, res, next) => {
-  try {
-    const result = await prisma.cart.findMany();
-    res.send(result);
-  } catch (error) {
-    next(error);
-  };
-});
-
-// GET any cart by cartId in request (Admin only)
-router.get('/:cartId', auth.adminProtection, async (req, res, next) => {
-  try {
-    const result = await prisma.cart.findUnique({
-      where: {
-        cartId: Number(req.params.cartId),
-      },
-    });
-    res.send(result);
-  }
-  catch (error) {
-    next(error);
-  };
-});
-
 // GET cart by ID in request, with all cartItems associated with that ID
 // ... AND each product associated with each cartItem
 router.get('/:cartId/all-items', auth.protection, async (req, res, next) => {
@@ -163,8 +138,6 @@ router.put('/item', auth.protection, async (req, res, next) => {
   };
 });
 
-
-
 // PUT cart data into an existing cart
 // For now, used only for changing cartStatus
 router.put('/:cartId', auth.protection, async (req, res, next) => {
@@ -221,20 +194,22 @@ router.delete('/item/:cartId', auth.protection, async (req, res, next) => {
   };
 });
 
-// GET cart by ID in request, with all cartItems associated with that ID
-// ... AND each product associated with each cartItem
-router.get('/:cartId/all-items-and-products', auth.protection, async (req, res, next) => {
+// GET all carts (Admin only)
+router.get('/', auth.adminProtection, async (req, res, next) => {
   try {
-    const result = await prisma.cart.findFirst({
+    const result = await prisma.cart.findMany();
+    res.send(result);
+  } catch (error) {
+    next(error);
+  };
+});
+
+// GET any cart by cartId in request (Admin only)
+router.get('/:cartId', auth.adminProtection, async (req, res, next) => {
+  try {
+    const result = await prisma.cart.findUnique({
       where: {
         cartId: Number(req.params.cartId),
-      },
-      include: {
-        cartItems: {
-          include: {
-            product: true,
-          },
-        },
       },
     });
     res.send(result);

@@ -1,17 +1,19 @@
 // To fully drop and reseed tables, run this command: npx prisma migrate reset
 const { PrismaClient } = require("@prisma/client");
 const { faker } = require("@faker-js/faker");
+const bcrypt = require("bcrypt");
 
 const prisma = new PrismaClient();
 
 // Seed data for 20 users and 1 administrator
 async function userSeed() {
   try {
+    const adminPassword = await bcrypt.hash("admin", 5);
     await prisma.user.create({
       data: {
         isAdmin: true,
         username: "admin",
-        password: "admin",
+        password: adminPassword,
         email: "admin"
       }
     })
