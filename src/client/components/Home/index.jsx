@@ -1,11 +1,17 @@
 import './style.css';
 import SearchProducts from '../SearchProducts';
-import Cart from '../Cart/CartSummary';
+import { useSelector } from 'react-redux';
 const Home = () => {
+    const { token, user: { isAdmin } } = useSelector(state => state.auth)
+
 
     return (
         <>
-            <SearchProducts />
+            {isAdmin ?
+                <>Admin View</>
+                : <SearchProducts />
+
+            }
         </>
     );
 };

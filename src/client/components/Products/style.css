@@ -17,6 +17,7 @@
     padding: 1% 8%;
     column-gap: 1%;
     row-gap: 1%;
+    width:90vw;
 }
 
 #products_catalog .product img {
