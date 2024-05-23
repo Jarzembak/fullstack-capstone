@@ -5,7 +5,7 @@ const ViewProducts = () => {
     const { data, isLoading, error } = useGetProductsQuery();
 
     if (isLoading) {
-        console.log("loading all users")
+        console.log("loading all products")
     }
 
     if (error) {
@@ -13,28 +13,35 @@ const ViewProducts = () => {
     }
 
     const renderProductHeaders = () => {
-        return <div className="user header">
-            <span>User Id</span>
-            <span>First Name</span>
-            <span>Last Name</span>
-            <span>Email</span>
+        return <div className="product header">
+            <span>Product Id</span>
+            <span>Name</span>
+            <span>Category</span>
+            <span>Price</span>
             <span>Initial Creation</span>
             <span>Last Modified</span>
-            <span>Is Admin?</span>
+            <span>Is Visible?</span>
         </div>
     }
 
-    const renderProduct = (product) => {
-        console.log(product)
-        return <></>
+    const renderProduct = ({ productId, createdAt, updatedAt, name, isVisible, imageUrl, description, category, price }) => {
+        return <div key={productId} className='product'>
+            <span>{productId}</span>
+            <span>{name}</span>
+            <span>{category}</span>
+            <span>${price}</span>
+            <span>{new Date(createdAt).toLocaleString()}</span>
+            <span>{new Date(updatedAt).toLocaleString()}</span>
+            <span>{isVisible}</span>
+        </div>
     }
 
 
     return (
-        <div id="users">
+        <div id="products">
             {data && data.length ?
                 <>
-                    {/* {renderUserHeaders()} */}
+                    {renderProductHeaders()}
                     {data.map(renderProduct)}
                 </> : "There are no users to show"}
         </div>
