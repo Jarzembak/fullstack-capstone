@@ -11,7 +11,6 @@ app.use(express.text({limit:'200mb'}));
 app.use("/", express.static(path.join(__dirname, "public")));
 
 app.use("/api", require("./api"));
-// app.use("/auth", require("./auth"))
 
 // backend routes
 const server = ViteExpress.listen(app, process.env.PORT||3000, () =>

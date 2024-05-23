@@ -1,5 +1,4 @@
 API DOCUMENTATION 
-(5/16 - may be missing routes)
 
 ------------------------------
 API URL Format
@@ -35,8 +34,11 @@ router.get('/', auth.protection, async (req, res, next) => {
 });
 
 Auth functions are imported via "const auth = require('../auth')".
-The method call "auth.protection" takes a json web token, which is verified before storing the payload in "req.user" for the next middleware function.
+The method calls "auth.protection" and "auth.adminProtection" take a json web token.
+The token is verified before storing the payload in "req.user", which will allow autheticated routes to reference the user.
 The payload includes the Number userId ("req.user.userId") and Boolean isAdmin ("req.user.isAdmin").
+
+Administrator privileges cannot be changed or granted through this API.
 
 ------------------------------
 Endpoints - General
@@ -44,24 +46,25 @@ Endpoints - General
 [Admin] GET /<resource>
 - Returns the complete table for the requested resource.
 - This may be used for any resource.
-- Products do not require administrator authentication for this route.
+- Products do NOT require administrator authentication for this route.
 
 [Admin] GET /<resource>/<resourceId>
 - Returns the resource with the primary key (ID) in the request.
 - This is not available for the cartItem table, which is instead accessed through the cart table.
-- Products do not require administrator authentication for this route.
+- Products do NOT require administrator authentication for this route.
 
 POST /<resource>
 - Creates a new row for a given resource.
     * Carts and cartItems have special cases below.
 - Accepts an object with all required fields (excluding primary key) in the request.
-- Non-primary keys and IDs should be included in the request,
+- Non-primary keys and IDs should be included in the data.
 - Currently, cartItems are created and updated through /carts routes only.
-- Certain keys (such as role flags for Users) can only be changed after creation.
+- Admin authentication is required for Products.
 
 PUT /<resource>/<resourceId>
 - Updates the row for a given resource based on the primary key.
 - Accepts an object with all required fields (excluding primary key) in the request.
+- Admin authentication is required for Products.
 
 ------------------------------
 Endpoints - User
@@ -71,8 +74,8 @@ GET /users/cart
 - For each user, there should only be one cart with cartStatus set to 'current' at a time.
 
 GET /users/cart/details
-- Returns a cart for the given user ID number with cartStatus 'current'
-- Also returns the cartItems and products associated with those cartItems
+- Returns a cart for the given user ID number with cartStatus 'current'.
+- Also returns the cartItems AND products/details associated with those cartItems.
 
 GET /users/history
 - Returns all carts for the given user ID number.
@@ -82,18 +85,23 @@ GET /users/history
 GET /users/history/<cartId>
 - Returns a single cart belonging to the logged in user, based on cartId.
 
+POST /users/login
+- The login route for all users.
+- Returns a token for user authentication.
+
+POST /users
+- Creates/registers a new user.
+- Hashes password with 5 salt_rounds.
+
+PUT /users
+- Edits data for the currently logged in user only.
+- Hashes password with 5 salt_rounds.
+
 ------------------------------
 Endpoints - Cart
 ------------------------------
-
 [Admin] GET /carts/<cartId>/items
 - Returns all cartItems associated with the cart ID number.
-
-GET /carts/<userId>/cart
-- Returns the user's first cart with cartStatus: 'current'.
-    * Mirrors a user route, 'GET /users/<userId>/cart', but without authentication
-- Also returns the cartItems associated with the cart.
-- There should only ever be one cart per user with cartStatus: 'current'.
 
 GET /carts/<userId>/history
 - Returns all carts (with cartItems) belonging to the user.
@@ -126,7 +134,7 @@ DELETE /carts/item/<cartId>
 - Deletes ALL cartItems with the matching cartId param.
 - Used to clear a user's cart completely.
 - Responds with status 204 when successful.
-- Only works with cartStatus 'current' carts
+- Only works with cartStatus 'current' carts; completed orders should not be changed.
 
 ------------------------------
 Endpoints - Product
@@ -150,10 +158,8 @@ GET /products/search
     orderBy: String // The Product column you want to search by (exact key names ONLY)
     orderDir: String // Must be 'asc' or 'desc' ONLY
 
-- No authentication required; users that have not logged in (Guests) can use this route.
+- No authentication required; users that have not logged in (Guests) can use this route. 
 
-------------------------------
-Endpoints - CartItem
-------------------------------
-- Depreciated
-- cartItems are now accessed through /carts routes.
+[Admin] DELETE /products/<productId>
+- Deletes a product with the productId in the address.
+- Responds with status 204 when successful.

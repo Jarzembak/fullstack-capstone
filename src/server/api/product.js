@@ -3,17 +3,17 @@ const router = express.Router();
 const { PrismaClient } = require("@prisma/client");
 const { Decimal } = require("@prisma/client/runtime/library");
 const prisma = new PrismaClient();
-const auth = require('../auth');
+const auth = require("../auth");
 
 // GET all products
-router.get('/', async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const result = await prisma.product.findMany();
     res.send(result);
   } catch (error) {
     next(error);
   }
-})
+});
 
 /*
 GET a number of products, with custom criteria
@@ -26,31 +26,33 @@ nameContains: String // String to search the product name for
 orderBy: String // The Product column you want to search by
 orderDir: String // Must be 'asc' or 'desc'
 */
-router.get('/search', async (req, res, next) => {
-    try {
-        const toPage = (req.query.pagination * (req.query.goToPage - 1))
-        if (toPage < 0) { toPage = 0 }
-
-        const result = await prisma.product.findMany({
-          skip: Number(toPage),
-          take: Number(req.query.pagination),
-          where: {
-            name: {
-              contains: req.query.nameContains,
-            },
-          },
-          orderBy: {
-            [req.query.orderBy]: req.query.orderDir,
-          },
-        });
-        res.send(result);
-    } catch (error) {
-        next(error)
+router.get("/search", async (req, res, next) => {
+  try {
+    const toPage = req.query.pagination * (req.query.goToPage - 1);
+    if (toPage < 0) {
+      toPage = 0;
     }
-})
+
+    const result = await prisma.product.findMany({
+      skip: Number(toPage),
+      take: Number(req.query.pagination),
+      where: {
+        name: {
+          contains: req.query.nameContains,
+        },
+      },
+      orderBy: {
+        [req.query.orderBy]: req.query.orderDir,
+      },
+    });
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+});
 
 // GET product by productId in request
-router.get('/:productId', async (req, res, next) => {
+router.get("/:productId", async (req, res, next) => {
   try {
     const result = await prisma.product.findUnique({
       where: {
@@ -58,14 +60,13 @@ router.get('/:productId', async (req, res, next) => {
       },
     });
     res.send(result);
-  }
-  catch (error) {
-    next(error)
+  } catch (error) {
+    next(error);
   }
 });
 
 // POST a new product
-router.post('/', auth.adminProtection, async (req, res, next) => {
+router.post("/", auth.adminProtection, async (req, res, next) => {
   try {
     const result = await prisma.product.create({
       data: {
@@ -74,17 +75,16 @@ router.post('/', auth.adminProtection, async (req, res, next) => {
         imageUrl: String(req.body.imageUrl),
         description: String(req.body.description),
         price: Decimal(req.body.price),
-      }
+      },
     });
     res.send(result);
-  }
-  catch (error) {
+  } catch (error) {
     next(error);
-  };
+  }
 });
 
 // PUT product data into an existing product
-router.put('/:productId', auth.adminProtection, async (req, res, next) => {
+router.put("/:productId", auth.adminProtection, async (req, res, next) => {
   try {
     const result = await prisma.product.update({
       where: {
@@ -99,25 +99,23 @@ router.put('/:productId', auth.adminProtection, async (req, res, next) => {
       },
     });
     res.send(result);
-  }
-  catch (error) {
+  } catch (error) {
     next(error);
-  };
+  }
 });
 
 // DELETE a product with the requested productId
-router.delete('/:productId', auth.adminProtection, async (req, res, next) => {
+router.delete("/:productId", auth.adminProtection, async (req, res, next) => {
   try {
     const result = await prisma.cartItem.delete({
       where: {
         productId: Number(req.params.cartId),
-      }
+      },
     });
     res.sendStatus(204);
-  }
-  catch (error) {
+  } catch (error) {
     next(error);
-  };
+  }
 });
 
 module.exports = router;
