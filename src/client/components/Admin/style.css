@@ -1,0 +1,15 @@
+
+#users, #products{
+    width:90vw;
+}
+.user, #products .product{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, 14%);
+    text-align: center;
+}
+
+.user +.user,.product+.product{
+    border-top: 1px solid #ccc;
+}
+
+

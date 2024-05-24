@@ -4,15 +4,20 @@ import CartSummary from "../Cart/CartSummary";
 import { useSelector } from "react-redux";
 
 const Navigation = ({ setCart }) => {
-    const { token } = useSelector(state => state.auth)
+    const { token, user: { isAdmin } } = useSelector(state => state.auth)
     return (
         <>
             <nav>
                 <Link to="/">Home</Link>
-                {token ? <>
-                    <Link to="/Cart">View Cart: $<CartSummary setCart={setCart} /></Link>
-                    <Link to="/Logout">Logout</Link>
-                </> :
+                {token ?
+                    isAdmin ? <>
+                        <Link to="/Admin/Users">View All Users</Link>
+                        <Link to="/Admin/Products">View All Products</Link>
+                        <Link to="/Logout">Logout</Link>
+                    </> : <>
+                        <Link to="/Cart">View Cart: $<CartSummary setCart={setCart} /></Link>
+                        <Link to="/Logout">Logout</Link>
+                    </> :
                     <>
                         <Link to="/Login">Login</Link>
                         <Link to="/Register">Register</Link>

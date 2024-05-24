@@ -7,3 +7,5 @@ export { default as Products } from './Products';
 export { default as ProductDetails } from './Products/ProductDetails';
 export { default as Register } from './Register';
 export { default as SearchProducts } from './SearchProducts';
+export { default as ViewProducts } from './Admin/ViewProducts';
+export { default as ViewUsers } from './Admin/ViewUsers';

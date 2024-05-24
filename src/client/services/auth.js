@@ -7,7 +7,10 @@ export const authSlice = createSlice({
         cart: {
             cartItems: []
         },
-        user: null
+        user: window.localStorage.getItem("userDetails") ? JSON.parse(atob(window.localStorage.getItem("userDetails"))) :
+            {
+                isAdmin: undefined
+            }
     },
     reducers: {
         setToken: (state, { payload }) => {
@@ -16,14 +19,16 @@ export const authSlice = createSlice({
             state.cart = {
                 cartItems: []
             }
+
             window.localStorage.setItem("token", payload.token);
+            window.localStorage.setItem("userDetails", btoa(JSON.stringify(payload.user)));
 
         },
         setCart: (state, action) => {
             state.cart = action.payload;
         },
         clearToken: (state) => {
-            window.localStorage.removeItem("token");
+            window.localStorage.clear();
             window.location.href = "/"
         }
     },
