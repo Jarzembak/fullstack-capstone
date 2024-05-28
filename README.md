@@ -1,18 +1,16 @@
-#  🚀 Capstone Boilerplate
+#  2311-FSA-ET-WEB-PT-SF Capstone Project
+Option 2: E-Commerce App
 
-A template for building web applications using the PERN (PostgreSQL, Express.js, React, Node.js) stack. 
+Group 5: James Boyd, Trent Snare, David Martin
 
-##  🏁 Getting Started
+A PERN (PostgreSQL, Express.js, React, Node.js) stack application. 
 
-1. **Don't fork or clone this repo!** Instead, create a new, empty directory on your machine and `git init` (or create an _empty_ repo on GitHub and clone it to your local machine)
+##  Getting Started
 
-2. Add this template as a remote and merge it into your own repository
+Refer to package.json for scripts and dependencies used.
 
-```bash
-git remote add boilermaker git@github.com:FullstackAcademy/capstone-app-template.git
-git fetch boilermaker
-git merge boilermaker/main
-```
+1. Copy or clone the GitHub repository to your local machine.
+( git clone git@github.com:Jarzembak/fullstack-capstone.git )
 
 3. Install packages
 
@@ -37,9 +35,9 @@ createdb your-database-name
 const connectionString = process.env.DATABASE_URL || 'https://localhost:5432/your-database-name';
 ```
 
-7. Seed the database
+7. Seed the database using prisma
 ```bash
-npm run seed
+npx prisma migrate dev
 ```
 
 8. Start the server
@@ -48,5 +46,3 @@ npm run dev
 ```
 
 9. Open your browser at `http://localhost:3000`
-
-10. Build something cool! 😎
