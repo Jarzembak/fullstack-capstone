@@ -18,9 +18,10 @@ Refer to package.json for scripts and dependencies used.
 npm i
 ```
 
-4. Add a `.env` file with your secret value for auth
+4. Add a `.env` file with your secret value for auth, and your database URL
 ```
 JWT_SECRET='somesecretvalue'
+DATABASE_URL="postgresql://your-user-name@localhost:5432/your-database-name"
 ```
 
 5. Create the database
@@ -29,20 +30,14 @@ JWT_SECRET='somesecretvalue'
 createdb your-database-name
 ```
 
-6. Update `src/server/db/client.js` to reflect the name of your database
-
-```js
-const connectionString = process.env.DATABASE_URL || 'https://localhost:5432/your-database-name';
-```
-
-7. Seed the database using prisma
+6. Seed the database using prisma
 ```bash
 npx prisma migrate dev
 ```
 
-8. Start the server
+7. Start the server
 ```bash
 npm run dev
 ```
 
-9. Open your browser at `http://localhost:3000`
+8. Open your browser at `http://localhost:3000`
