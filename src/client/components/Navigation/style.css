@@ -17,9 +17,6 @@ nav *{
     text-decoration: unset;
 }
 
-nav *:hover{
-    border: 1px solid black;
-}
 
 #content{
     margin:2%;

@@ -22,3 +22,7 @@
 .cartItem img{
     width: 90%;
 }
+
+.noShow {
+    display:none;
+}

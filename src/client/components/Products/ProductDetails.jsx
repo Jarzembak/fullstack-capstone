@@ -34,7 +34,7 @@ const ProductDetails = ({ setCart }) => {
                 console.log("there was an error adding the item", error)
             })
         } else {
-            navigate("/Login");
+            navigate("/Login", {});
         }
     }
 
@@ -59,13 +59,14 @@ const ProductDetails = ({ setCart }) => {
             <>
                 <SearchProducts />
 
-                {(({ name, price, productId, imageUrl, description }) => <>
+                {(({ name, price, category, productId, imageUrl, description }) => <>
                     <div className='productDetails'>
                         <div className="productImage">
                             <img src={imageUrl} alt={name} />
 
                         </div>
                         <div className="details">
+                            <h3 className='category'>{category}</h3>
                             <h1 className='name'>{name}</h1>
                             <p className='description'>{description}</p>
                             <div className="price">

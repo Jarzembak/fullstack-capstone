@@ -38,8 +38,11 @@ const Login = ({ setToken }) => {
       <div>{errorMessage}</div>
       <label><span>Username</span><input name="username" onChange={handleFieldChange} /></label>
       <label><span>Password</span><input name="password" onChange={handleFieldChange} /></label>
-      <input className="button" type='submit' value="Login"></input>
-      <button className="button" onClick={handleRegisterClick}>Register</button>
+      <div id='LoginButtons'>
+        <input className="button" type='submit' value="Login"></input>
+        <button className="button" onClick={handleRegisterClick}>Register</button>
+      </div>
+
     </form>
 
   );
