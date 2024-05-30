@@ -38,7 +38,7 @@ const OrderHistory = () => {
 
     return (
         <>
-            {nonCurrentCarts.length ? nonCurrentCarts.sort(({ cartId: A }, { cartId: B }) => A > B).map(renderOrder) : "No Order History to Show"}
+            {nonCurrentCarts.length ? nonCurrentCarts.sort(({ cartId: A }, { cartId: B }) => A < B ? 1 : -1).map(renderOrder) : "No Order History to Show"}
         </>
     );
 };

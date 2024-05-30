@@ -23,9 +23,10 @@ const ViewUsers = () => {
         </div>
     }
 
-    const renderUser = ({ userId, createdAt, updatedAt, isAdmin, firstName, lastName, email }) => {
+    const renderUser = ({ userId, username, createdAt, updatedAt, isAdmin, firstName, lastName, email }) => {
         return <div className="user" key={userId}>
             <span>{userId}</span>
+            <span>{username}</span>
             <span>{firstName}</span>
             <span>{lastName}</span>
             <span>{email}</span>

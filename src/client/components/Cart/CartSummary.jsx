@@ -10,9 +10,10 @@ const CartSummary = ({ setCart }) => {
     const [createCart, { data: newCart, isUninitialized }] = useCreateCartMutation()
 
     const getCartTotal = ({ cartItems } = { cartItems: [] }) => {
-        return <>{cartItems.reduce((cartTotal, { quantity, price }) => {
+
+        return <><span className={cartItems.length ? "" : "noShow"}>View Cart: ${cartItems.reduce((cartTotal, { quantity, price }) => {
             return cartTotal += (price * quantity);
-        }, 0)} | {cart.cartItems.reduce((sum, { quantity }) => quantity += sum, 0)} items</>
+        }, 0)} | {cart.cartItems.reduce((sum, { quantity }) => quantity += sum, 0)} items</span></>
     }
 
     useEffect(() => {

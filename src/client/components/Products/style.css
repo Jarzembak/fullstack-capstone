@@ -68,6 +68,11 @@
     padding: 5%;
 }
 
+.productDetails .category {
+    color: #52799b;
+    /* padding: unset !important; */
+}
+
 .productDetails .details {
     display: flex;
     flex-direction: column;

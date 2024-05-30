@@ -4,7 +4,7 @@
 }
 .user, #products .product{
     display:grid;
-    grid-template-columns: repeat(auto-fill, 14%);
+    grid-template-columns: repeat(auto-fill, 12.5%);
     text-align: center;
 }
 
@@ -12,4 +12,22 @@
     border-top: 1px solid #ccc;
 }
 
+#adminButtons{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    width:90vw;
+    justify-items: center;
+    align-items: center;
+}
 
+#adminButtons a:hover{
+    box-shadow: 0 0 25px 25px #ccc inset;   
+}
+
+#adminButtons a{
+    padding:20%;
+    transition:1s;
+    border-radius: 10px 10px;
+    box-shadow: 0 0 25px -15px #ccc inset;   
+
+}

@@ -15,13 +15,22 @@
     color: #9DBFAF;
 }
 
-#searchSubmitButton{
-    width: 40px;
-    border: 1px solid #00B4CC;
-    background: #00B4CC;
+.searchButton {
     text-align: center;
     color: #fff;
-    border-radius: 0 5px 5px 0;
+    border-radius: 5px;
+    margin-left:5px;
     cursor: pointer;
     font-size: 20px;
+    border: unset;
 }
+
+#searchSubmitButton{
+    background-color: #00B4CC;
+
+}
+
+#clearSearch {
+    background-color: #FF9800;
+}
+
