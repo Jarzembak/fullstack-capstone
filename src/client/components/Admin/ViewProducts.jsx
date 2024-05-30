@@ -20,11 +20,10 @@ const ViewProducts = () => {
             <span>Price</span>
             <span>Initial Creation</span>
             <span>Last Modified</span>
-            <span>Is Visible?</span>
         </div>
     }
 
-    const renderProduct = ({ productId, createdAt, updatedAt, name, isVisible, imageUrl, description, category, price }) => {
+    const renderProduct = ({ productId, createdAt, updatedAt, name, imageUrl, description, category, price }) => {
         return <div key={productId} className='product'>
             <span>{productId}</span>
             <span>{name}</span>
@@ -32,7 +31,6 @@ const ViewProducts = () => {
             <span>${price}</span>
             <span>{new Date(createdAt).toLocaleString()}</span>
             <span>{new Date(updatedAt).toLocaleString()}</span>
-            <span>{isVisible}</span>
         </div>
     }
 
