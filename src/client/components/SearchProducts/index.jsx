@@ -49,7 +49,7 @@ const SearchProducts = () => {
 
                 <input id="searchSubmitButton" name="searchSubmitButton" className='searchButton' type="submit" value="Go" />
                 <input id="clearSearch" name="clearSearch" className='searchButton' type="reset" value="Clear" />
-                <button id="hideExtraOptions" onClick={handleHideOptions}>Options</button>
+                <button id="hideExtraOptions" className='searchButton' onClick={handleHideOptions}>Options</button>
             </form>
         </>
     );

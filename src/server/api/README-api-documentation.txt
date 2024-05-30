@@ -155,6 +155,7 @@ GET /products/search
     pagination: Number // The number of results per page
     goToPage: Number // Page will be calculated as (pagination * (goToPage - 1))
     nameContains: String // String to search the product name for
+    categoryContains: String // String to search the category for
     orderBy: String // The Product column you want to search by (exact key names ONLY)
     orderDir: String // Must be 'asc' or 'desc' ONLY
 

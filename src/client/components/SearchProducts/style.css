@@ -4,7 +4,6 @@
     width: 30vw;
 }
 
-
 #search {
     width:100%;
     border: 3px solid #00B4CC;
@@ -27,11 +26,14 @@
 
 #searchSubmitButton{
     background-color: #00B4CC;
-
 }
 
 #clearSearch {
-    background-color: #FF9800;
+    background-color: #ff9800;
+}
+
+#hideExtraOptions{
+    background-color: #e6c200;
 }
 
 #extraOptions{
@@ -41,4 +43,3 @@
 #extraOptions.showExtraOptions{
     display:block;
 }
-

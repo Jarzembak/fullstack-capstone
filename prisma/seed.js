@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 
 const prisma = new PrismaClient();
 
-// Seed data for 20 users and 1 administrator
+// Seed data for 50 users and 1 administrator
 async function userSeed() {
   try {
     const adminPassword = await bcrypt.hash("admin", 5);
@@ -17,7 +17,7 @@ async function userSeed() {
         email: "admin"
       }
     })
-    for(i=0; i < 20; i++){
+    for(i=0; i < 50; i++){
       await prisma.user.create({
         data: {
           firstName: faker.person.firstName(),
@@ -46,9 +46,9 @@ async function userSeed() {
   }));
 };
 
-// Seed data for 20 products
+// Seed data for 50 products
 async function productSeed() {
-  for(i=0; i < 20; i++){
+  for(i=0; i < 50; i++){
     try {
       await prisma.product.create({
         data: {
@@ -98,6 +98,7 @@ async function cartSeed() {
 };
 
 // Seeds 1 item per cart
+// NOTE: Runs slowly. Do not use with large seeds.
 async function cartItemSeed() {
   const products = await prisma.product.findMany();
   const carts = await prisma.cart.findMany();
@@ -120,9 +121,8 @@ async function cartItemSeed() {
   };
 };
 
-// WARNING: Will initialize all data!
-// NOTE: Runs slowly. Do not use with large seeds.
-async function initAllTables() {
+// Runs all seed functions
+async function seedAllTables() {
   await userSeed();
   await productSeed();
   await cartSeed();
@@ -131,7 +131,7 @@ async function initAllTables() {
   await cartItemSeed();
 };
 
-initAllTables();
+seedAllTables();
 
 try {
     async () => { await prisma.$disconnect(); }
