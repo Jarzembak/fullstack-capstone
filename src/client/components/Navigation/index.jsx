@@ -16,6 +16,7 @@ const Navigation = ({ setCart }) => {
                         <Link to="/Logout">Logout</Link>
                     </> : <>
                         <Link to="/Cart">View Cart: $<CartSummary setCart={setCart} /></Link>
+                        <Link to="/OrderHistory">Order History</Link>
                         <Link to="/Logout">Logout</Link>
                     </> :
                     <>

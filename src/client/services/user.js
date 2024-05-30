@@ -15,6 +15,9 @@ export const userApi = createApi({
         }
     }),
     endpoints: (builder) => ({
+        getCurrentUser: builder.query({
+            query: () => ({ url: "users" }),
+        }),
         getUsers: builder.query({
             query: () => ({ url: "users/all" }),
         }),
@@ -45,4 +48,4 @@ export const userApi = createApi({
     }),
 });
 
-export const { useGetUsersQuery, useCreateUserMutation, useGetUserHistoryQuery, useGetUserCurrentCartQuery, useGetUserCurrentCartDetailsQuery, useAuthenticateUserMutation } = userApi;
+export const { useGetCurrentUserQuery, useGetUsersQuery, useCreateUserMutation, useGetUserHistoryQuery, useGetUserCurrentCartQuery, useGetUserCurrentCartDetailsQuery, useAuthenticateUserMutation } = userApi;

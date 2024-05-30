@@ -23,11 +23,16 @@ export function Cart() {
     }
 
 
+
+
     return (<>
         <div id="cart">
             {currentCart ? currentCart.cartItems.map((item) => {
                 return renderCartItem(item)
             }) : "Cart Main Page"}
+            <Link to="/Checkout">
+                <button className='button checkout'>Check Out</button>
+            </Link>
         </div>
     </>
     )

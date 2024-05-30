@@ -1,14 +1,12 @@
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Navigation, Login, Register, Products, ProductDetails, Home, Cart, Logout, ViewProducts, ViewUsers } from './components';
+import { Navigation, Login, Register, Products, ProductDetails, Home, Cart, Logout, ViewProducts, ViewUsers, CheckOut, OrderHistory, OrderSubmitted } from './components';
 import { useDispatch, useSelector } from 'react-redux';
 import { authSlice } from './services/auth';
 
 function App() {
   const { token, user: { isAdmin }, user } = useSelector(state => state.auth);
   const test = useSelector(state => state.auth);
-
-  console.log(test, isAdmin, user)
 
   const dispatch = useDispatch();
 
@@ -34,6 +32,9 @@ function App() {
             </> :
               <>
                 <Route path="/Cart" element={<Cart />} />
+                <Route path="/CheckOut" element={<CheckOut setCart={setCart} />} />
+                <Route path="/OrderHistory" element={<OrderHistory />} />
+                <Route path="/OrderSubmitted" element={<OrderSubmitted />} />
                 <Route path="/Logout" element={<Logout />} />
               </>
               :

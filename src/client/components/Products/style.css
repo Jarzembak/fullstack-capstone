@@ -20,6 +20,20 @@
     width:90vw;
 }
 
+#products_catalog .product{
+    position:relative;
+}
+
+.product.inCart:before{
+    background: rgba(190, 0, 0, .8);
+    content: "In Cart";
+    position: ABSOLUTE;
+    color: white;
+    padding: 4px;
+    top: 0;
+    right: 0;
+}
+
 #products_catalog .product img {
     width: 100%;
     border: 2px solid #ccc
@@ -102,4 +116,5 @@
 .addToCart {
     background: #7DC855;
 }
+
 

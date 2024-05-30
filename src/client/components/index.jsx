@@ -9,3 +9,6 @@ export { default as Register } from './Register';
 export { default as SearchProducts } from './SearchProducts';
 export { default as ViewProducts } from './Admin/ViewProducts';
 export { default as ViewUsers } from './Admin/ViewUsers';
+export { default as CheckOut } from './Cart/CheckOut';
+export { default as OrderHistory } from './OrderHistory';
+export { default as OrderSubmitted } from './Cart/OrderSubmitted';

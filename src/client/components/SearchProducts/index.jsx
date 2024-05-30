@@ -18,7 +18,7 @@ const SearchProducts = () => {
         <>
             <form id="SearchProducts" onSubmit={handleSubmit} >
                 <input id="nameContains" type="text" name="nameContains" autoComplete='off' placeholder='What are you looking for?' />
-                <input id="pagination" type="hidden" name="pagination" autoComplete='off' defaultValue="8" />
+                <input id="pagination" type="hidden" name="pagination" autoComplete='off' defaultValue="50" />
                 <input id="goToPage" type="hidden" name="goToPage" autoComplete='off' defaultValue="1" />
                 <input id="orderBy" type="hidden" name="orderBy" autoComplete='off' defaultValue="price" />
                 <input id="orderDir" type="hidden" name="orderDir" autoComplete='off' defaultValue="asc" />
