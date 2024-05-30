@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 
 const Navigation = ({ setCart }) => {
     const { token, user: { isAdmin } } = useSelector(state => state.auth)
+
     return (
         <>
             <nav>

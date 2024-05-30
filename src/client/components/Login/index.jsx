@@ -17,16 +17,19 @@ const Login = ({ setToken }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrorMessage("")
     login(inputValues).unwrap().then((success) => {
       setToken(success);
       navigate("/")
     }, (error) => {
-      setErrorMessage(error.data);
+      setErrorMessage("Invalid Login. Please try again");
       reset();
     });
   };
 
-
+  const handleRegisterClick = () => {
+    navigate("/Register");
+  }
 
   return (
 
@@ -35,7 +38,8 @@ const Login = ({ setToken }) => {
       <div>{errorMessage}</div>
       <label><span>Username</span><input name="username" onChange={handleFieldChange} /></label>
       <label><span>Password</span><input name="password" onChange={handleFieldChange} /></label>
-      <input type='submit' value="Login"></input>
+      <input className="button" type='submit' value="Login"></input>
+      <button className="button" onClick={handleRegisterClick}>Register</button>
     </form>
 
   );

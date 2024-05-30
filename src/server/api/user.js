@@ -203,6 +203,7 @@ router.post("/login", async (req, res, next) => {
         firstName: user.firstName,
         lastName: user.lastName,
         username: user.username,
+        isAdmin: user.isAdmin
       },
     });
   } catch (err) {

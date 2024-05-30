@@ -1,6 +1,6 @@
 import './style.css';
 import SearchProducts from "../SearchProducts";
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useGetProductQuery } from '../../services/products'
 import { useCreateCartItemMutation, useDestroyCartItemMutation, useUpdateCartItemMutation } from '../../services/cart';
 import { useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import { useState } from 'react';
 
 const ProductDetails = ({ setCart }) => {
     const { productId } = useParams();
+    const navigate = useNavigate();
     const { cart, cart: { cartId } } = useSelector(state => state.auth)
     const { data: product, isLoading } = useGetProductQuery(productId)
 
@@ -24,13 +25,17 @@ const ProductDetails = ({ setCart }) => {
     }
 
     const handleAddToCartButton = (evt) => {
-        addProductToCart({ ...product, quantity, cartId }).unwrap().then((success) => {
-            let updatedCart = JSON.parse(JSON.stringify(cart));
-            updatedCart.cartItems.push(success)
-            setCart(updatedCart)
-        }, (error) => {
-            console.log("there was an error adding the item", error)
-        })
+        if (cartId) {
+            addProductToCart({ ...product, quantity, cartId }).unwrap().then((success) => {
+                let updatedCart = JSON.parse(JSON.stringify(cart));
+                updatedCart.cartItems.push(success)
+                setCart(updatedCart)
+            }, (error) => {
+                console.log("there was an error adding the item", error)
+            })
+        } else {
+            navigate("/Login");
+        }
     }
 
     const handleUpdateCartItem = async () => {

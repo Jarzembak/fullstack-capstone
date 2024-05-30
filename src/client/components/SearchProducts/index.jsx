@@ -9,7 +9,7 @@ const SearchProducts = () => {
         evt.preventDefault();
         const params = createSearchParams([...new FormData(evt.target)]);
         navigate({
-            pathname: "/Products"
+            pathname: "./Products"
         }, { state: { searchParams: params.toString() } });
     }
 
