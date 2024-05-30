@@ -148,7 +148,21 @@ GET /products/<productID>
 - No authentication required; users that have not logged in (Guests) can use this route.
 
 GET /products/search
-- This executes a search for products with customizable criteria.
+- This executes a search for products with name containing a string, with customizable criteria.
+- The URL must be followed by a query:
+  .../products/search?pagination=<Number>&goToPage=<Number>&nameContains=<String>&orderBy=<String>&orderDir=<String>
+    
+    pagination: Number // The number of results per page
+    goToPage: Number // Page will be calculated as (pagination * (goToPage - 1))
+    nameContains: String // String to search the product name for
+    orderBy: String // The Product column you want to search by (exact key names ONLY)
+    orderDir: String // Must be 'asc' or 'desc' ONLY
+
+- No authentication required; users that have not logged in (Guests) can use this route. 
+
+GET /products/search/category
+- This returns a filtered list of products containing a category, with customizable criteria.
+- The 'category' criterion must be an exact string match, making it suitable for navigation.
 - The URL must be followed by a query:
   .../products/search?pagination=<Number>&goToPage=<Number>&nameContains=<String>&orderBy=<String>&orderDir=<String>
     

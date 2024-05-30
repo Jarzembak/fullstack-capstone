@@ -16,7 +16,7 @@ router.get("/", async (req, res, next) => {
 });
 
 /*
-GET a number of products, with custom criteria
+GET a number of products with names containing a string, with custom criteria
 The URL should be followed by:
   ?pagination=<Number>&goToPage=<Number>&nameContains=<String>&orderBy=<String>&orderDir=<'asc' or 'desc'>
 
@@ -39,6 +39,45 @@ router.get("/search", async (req, res, next) => {
       where: {
         name: {
           contains: req.query.nameContains,
+        },
+      },
+      orderBy: {
+        [req.query.orderBy]: req.query.orderDir,
+      },
+    });
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/*
+GET a number of products with the desired category, with custom criteria
+
+The 'category' criterion must be an EXACT match string
+
+The URL should be followed by:
+  ?pagination=<Number>&goToPage=<Number>&category=<String>&orderBy=<String>&orderDir=<'asc' or 'desc'>
+
+pagination: Number // The number of results per page
+goToPage: Number // Page will be calculated as (pagination * (goToPage - 1))
+category: String // String to search the product name for
+orderBy: String // The Product column you want to search by
+orderDir: String // Must be 'asc' or 'desc'
+*/
+router.get("/search/category", async (req, res, next) => {
+  try {
+    const toPage = req.query.pagination * (req.query.goToPage - 1);
+    if (toPage < 0) {
+      toPage = 0;
+    }
+
+    const result = await prisma.product.findMany({
+      skip: Number(toPage),
+      take: Number(req.query.pagination),
+      where: {
+        name: {
+          equals: req.query.category,
         },
       },
       orderBy: {
