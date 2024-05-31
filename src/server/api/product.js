@@ -26,7 +26,7 @@ goToPage: Number // Page will be calculated as (pagination * (goToPage - 1))
 nameContains: String // String to search the product name for
 categoryContains: String // String to search for the product's category
 orderBy: String // The Product column you want to search by
-orderDir: String // Must be 'asc' or 'desc'
+sortBy: String // Must be 'asc' or 'desc'
 */
 router.get("/search", async (req, res, next) => {
   try {
@@ -44,10 +44,10 @@ router.get("/search", async (req, res, next) => {
         },
         category: {
           contains: req.query.categoryContains,
-        }
+        },
       },
       orderBy: {
-        [req.query.orderBy]: req.query.orderDir,
+        [req.query.orderBy]: req.query.sortBy,
       },
     });
     res.send(result);
@@ -56,38 +56,43 @@ router.get("/search", async (req, res, next) => {
   }
 });
 
-/*
-GET a number of products with the desired category, with custom criteria
-The 'category' criterion must be an EXACT match string
-
-The URL should be followed by:
-  ?pagination=<Number>&goToPage=<Number>&category=<String>&orderBy=<String>&orderDir=<'asc' or 'desc'>
-
-pagination: Number // The number of results per page
-goToPage: Number // Page will be calculated as (pagination * (goToPage - 1))
-categoryEquals: String // String to search the product name for
-orderBy: String // The Product column you want to search by
-orderDir: String // Must be 'asc' or 'desc'
+/* W.I.P.
+Same as above search route, but returns an array including BOTH the search results and the number of records found.
 */
-router.get("/search/category", async (req, res, next) => {
+router.get("/searchv2", async (req, res, next) => {
   try {
     const toPage = req.query.pagination * (req.query.goToPage - 1);
     if (toPage < 0) {
       toPage = 0;
     }
 
-    const result = await prisma.product.findMany({
-      skip: Number(toPage),
-      take: Number(req.query.pagination),
-      where: {
-        categoryEquals: {
-          equals: req.query.category,
+    const result = await prisma.$transaction([
+      prisma.product.count({
+        where: {
+          name: {
+            contains: req.query.nameContains,
+          },
+          category: {
+            contains: req.query.categoryContains,
+          },
         },
-      },
-      orderBy: {
-        [req.query.orderBy]: req.query.orderDir,
-      },
-    });
+      }),
+      prisma.product.findMany({
+        skip: Number(toPage),
+        take: Number(req.query.pagination),
+        where: {
+          name: {
+            contains: req.query.nameContains,
+          },
+          category: {
+            contains: req.query.categoryContains,
+          },
+        },
+        orderBy: {
+          [req.query.orderBy]: req.query.sortBy,
+        },
+      }),
+    ]);
     res.send(result);
   } catch (error) {
     next(error);

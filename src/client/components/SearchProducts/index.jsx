@@ -14,7 +14,7 @@ const SearchProducts = ({ categories = [] }) => {
     const handleClearSearch = () => {
         navigate({
             pathname: `/Products`
-        }, { state: { searchParams: "nameContains=&pagination=50&goToPage=1&orderBy=price&orderDir=asc" } });
+        }, { state: { searchParams: "nameContains=&pagination=50&goToPage=1&orderBy=price&sortBy=asc" } });
     }
 
     const handleHideOptions = (evt) => {
@@ -49,7 +49,7 @@ const SearchProducts = ({ categories = [] }) => {
                             <option value="price">Order By: Price</option>
                         </select>
 
-                        <select name="orderDir" defaultValue="asc">
+                        <select name="sortBy" defaultValue="asc">
                             <option value={"asc"}>Sort: Ascending</option>
                             <option value={"desc"}>Sort: Descending</option>
                         </select>
