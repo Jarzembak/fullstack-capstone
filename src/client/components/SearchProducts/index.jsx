@@ -1,7 +1,7 @@
 import './style.css';
 import { useNavigate, createSearchParams } from "react-router-dom"
 
-const SearchProducts = () => {
+const SearchProducts = ({ categories = [] }) => {
 
     const navigate = useNavigate();
 
@@ -18,7 +18,12 @@ const SearchProducts = () => {
     }
 
     const handleHideOptions = (evt) => {
+        evt.preventDefault();
         document.getElementById("extraOptions").classList.toggle("showExtraOptions")
+    }
+
+    const renderCategoryOptions = (category) => {
+        return <option key={category} value={category}>Category: {category}</option>
     }
 
 
@@ -29,10 +34,14 @@ const SearchProducts = () => {
 
                     <input id="nameContains" type="text" name="nameContains" autoComplete='off' placeholder='What are you looking for?' />
                     <div id="extraOptions">
-                        <select name="categoryContains" defaultValue=""></select>
 
-                        <div><label># of Items <input id="pagination" type="number" name="pagination" autoComplete='off' defaultValue="50" /></label></div>
-                        <div><label>Go to Page #</label> <input id="goToPage" type="number" name="goToPage" autoComplete='off' defaultValue="1" /></div>
+                        <select name="categoryContains" defaultValue="">
+                            <option key="" value="">Category: All</option>
+                            {categories.map(renderCategoryOptions)}
+                        </select>
+
+                        <div><label># of Items </label><input id="pagination" type="number" name="pagination" autoComplete='off' defaultValue="50" /></div>
+                        <div><label>Go to Page #</label><input id="goToPage" type="number" name="goToPage" autoComplete='off' defaultValue="1" /></div>
 
                         <select name="orderBy" defaultValue="price">
                             <option value="name">Order By: Name</option>
