@@ -169,10 +169,12 @@ GET /products/searchv2
     
     pagination: Number // The number of results per page
     goToPage: Number // Page will be calculated as (pagination * (goToPage - 1))
-    categoryEquals: String // String match to a product category
+    nameContains: String // String to search the product name for
+    categoryContains: String // String to search the product category for
     orderBy: String // The Product column you want to search by (exact key names ONLY)
     sortBy: String // Must be 'asc' or 'desc' ONLY
 
+- The response ALSO queries Prisma for the number of results the search returns.
 - No authentication required; users that have not logged in (Guests) can use this route. 
 
 [Admin] DELETE /products/<productId>
